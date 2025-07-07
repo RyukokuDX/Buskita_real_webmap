@@ -1,0 +1,50 @@
+# Git関連
+.git
+.gitignore
+
+# Python関連
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# 仮想環境
+venv/
+env/
+ENV/
+
+# IDE関連
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS関連
+.DS_Store
+Thumbs.db
+
+# プロジェクト固有
+archive/
+project_backups/
+docs/
+
+# Docker関連
+Dockerfile
+docker-compose.yml
+.dockerignore 

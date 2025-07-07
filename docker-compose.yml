@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  buskita-webapp:
+    build: .
+    ports:
+      - "5001:5001"
+    volumes:
+      # 開発時にコードの変更を反映させるためのボリュームマウント
+      - ./buskita:/app
+      # バックアップファイル用のボリューム
+      - ./archive:/app/archive
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s 
