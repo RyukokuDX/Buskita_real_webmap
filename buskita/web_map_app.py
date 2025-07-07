@@ -224,5 +224,35 @@ def api_timetable_data():
         print(f"Error serving timetable json: {e}")
         return jsonify({}), 500
 
+@app.route('/api/network_test')
+def api_network_test():
+    """VPN環境でのネットワーク接続テスト"""
+    test_urls = [
+        'https://tile.openstreetmap.org/14/14000/6800.png',
+        'https://maps.wikimedia.org/osm-intl/14/14000/6800.png',
+        'https://www.openstreetmap.org/'
+    ]
+    
+    results = {}
+    for url in test_urls:
+        try:
+            response = requests.get(url, timeout=5)
+            results[url] = {
+                'status': response.status_code,
+                'accessible': response.status_code == 200
+            }
+        except Exception as e:
+            results[url] = {
+                'status': 'error',
+                'accessible': False,
+                'error': str(e)
+            }
+    
+    return jsonify({
+        'timestamp': datetime.now().isoformat(),
+        'results': results,
+        'vpn_detected': not any(result['accessible'] for result in results.values())
+    })
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001) 

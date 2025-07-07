@@ -76,11 +76,83 @@
 
     <script>
         const map = L.map('map').setView([34.98, 135.95], 14);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-            maxZoom: 20, 
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            subdomains: 'abc'
-        }).addTo(map);
+        // 複数の地図タイルサービスを試行
+        const tileLayers = [
+            {
+                url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                options: { 
+                    maxZoom: 20, 
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    subdomains: 'abc'
+                }
+            },
+            {
+                url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                options: { 
+                    maxZoom: 20, 
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }
+            },
+            {
+                url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png',
+                options: { 
+                    maxZoom: 20, 
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }
+            }
+        ];
+
+        let currentTileLayer = null;
+        let tileLayerIndex = 0;
+
+        function addTileLayer() {
+            if (currentTileLayer) {
+                map.removeLayer(currentTileLayer);
+            }
+            
+            if (tileLayerIndex >= tileLayers.length) {
+                // すべての地図サービスが失敗した場合、エラーページを表示
+                console.warn('すべての地図サービスへのアクセスに失敗しました。VPN環境の可能性があります。');
+                showMapError();
+                return;
+            }
+
+            const tileConfig = tileLayers[tileLayerIndex];
+            currentTileLayer = L.tileLayer(tileConfig.url, tileConfig.options);
+            
+            currentTileLayer.on('tileerror', function() {
+                console.warn(`地図タイルの読み込みに失敗しました: ${tileConfig.url}`);
+                tileLayerIndex++;
+                setTimeout(addTileLayer, 1000);
+            });
+
+            currentTileLayer.addTo(map);
+        }
+
+        function showMapError() {
+            // 地図コンテナを非表示にして、エラーメッセージを表示
+            const mapContainer = document.getElementById('map-container');
+            mapContainer.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background-color: #f8f9fa;">
+                    <div style="text-align: center; padding: 40px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🗺️</div>
+                        <h2 style="color: #dc3545; margin-bottom: 20px;">地図の表示に失敗しました</h2>
+                        <p style="color: #666; margin-bottom: 20px;">VPN環境内のサーバーから外部の地図サービスにアクセスできない可能性があります。</p>
+                        <div style="background-color: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin: 20px 0; text-align: left;">
+                            <h4 style="color: #007bff; margin-top: 0;">解決方法</h4>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li>VPN設定で外部サイト（openstreetmap.org）へのアクセスを許可</li>
+                                <li>プロキシサーバーの設定</li>
+                                <li>ネットワーク管理者に地図サービスへのアクセス制限解除を依頼</li>
+                            </ul>
+                        </div>
+                        <p style="color: #666; font-size: 14px;">バス位置情報と時刻表機能は正常に動作します。</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        addTileLayer();
         let busMarkers = {};
         function getOccupancyStyle(p) { if (p === null) return { color: '#6c757d' }; if (p <= 10) return { color: '#007bff' }; if (p <= 20) return { color: '#28a745' }; if (p <= 30) return { color: '#ffc107' }; if (p <= 39) return { color: '#dc3545' }; return { color: '#000000' }; }
         function createBusIcon(p) { const s = getOccupancyStyle(p); return L.divIcon({ className: 'custom-div-icon', html: `<i class="fa-solid fa-bus fa-2x" style="color: ${s.color}; -webkit-text-stroke: 1px white;"></i>`, iconSize: [32, 32], iconAnchor: [16, 16] }); }
