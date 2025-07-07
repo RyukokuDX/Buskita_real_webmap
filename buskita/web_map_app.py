@@ -173,7 +173,7 @@ def api_bus_locations():
 def timetable_page():
     """時刻表ページを表示する"""
     try:
-        with open('buskita/static/timetable.json', 'r', encoding='utf-8') as f:
+        with open('static/timetable.json', 'r', encoding='utf-8') as f:
             raw_timetable_data = json.load(f)
 
         timetable_data = {}
@@ -217,7 +217,7 @@ def api_landmarks():
 def api_timetable_data():
     """静的な時刻表JSONをそのまま返す"""
     try:
-        with open('buskita/static/timetable.json', 'r', encoding='utf-8') as f:
+        with open('static/timetable.json', 'r', encoding='utf-8') as f:
             timetable_data = json.load(f)
         return jsonify(timetable_data)
     except Exception as e:

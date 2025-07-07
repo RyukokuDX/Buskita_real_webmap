@@ -23,5 +23,8 @@ EXPOSE 5001
 ENV FLASK_APP=web_map_app.py
 ENV FLASK_ENV=production
 
+# 必要なディレクトリを作成
+RUN mkdir -p archive
+
 # Gunicornでアプリケーションを起動
 CMD ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "4", "--timeout", "120", "web_map_app:app"] 

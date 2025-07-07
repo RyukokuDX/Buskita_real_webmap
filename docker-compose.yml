@@ -6,8 +6,6 @@ services:
     ports:
       - "5001:5001"
     volumes:
-      # 開発時にコードの変更を反映させるためのボリュームマウント
-      - ./buskita:/app
       # バックアップファイル用のボリューム
       - ./archive:/app/archive
     environment:

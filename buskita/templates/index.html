@@ -76,7 +76,11 @@
 
     <script>
         const map = L.map('map').setView([34.98, 135.95], 14);
-        L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', { maxZoom: 20, attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors' }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+            maxZoom: 20, 
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            subdomains: 'abc'
+        }).addTo(map);
         let busMarkers = {};
         function getOccupancyStyle(p) { if (p === null) return { color: '#6c757d' }; if (p <= 10) return { color: '#007bff' }; if (p <= 20) return { color: '#28a745' }; if (p <= 30) return { color: '#ffc107' }; if (p <= 39) return { color: '#dc3545' }; return { color: '#000000' }; }
         function createBusIcon(p) { const s = getOccupancyStyle(p); return L.divIcon({ className: 'custom-div-icon', html: `<i class="fa-solid fa-bus fa-2x" style="color: ${s.color}; -webkit-text-stroke: 1px white;"></i>`, iconSize: [32, 32], iconAnchor: [16, 16] }); }
@@ -155,15 +159,24 @@
 
         function findNextBus(direction, dayOfWeek) {
             const now = new Date();
-            const schedules = timetableData[direction]?.schedules?.[dayOfWeek];
-
-            if (!schedules) {
+            const routeData = timetableData[direction];
+            
+            if (!routeData || !routeData.schedules || !routeData.schedules[dayOfWeek]) {
                 console.warn(`スケジュールが見つかりません: direction=${direction}, dayOfWeek=${dayOfWeek}`);
                 return { next: null, following: null, final: null };
             }
 
+            // 元の時刻表データから直接スケジュールを取得
+            const originalSchedules = routeData.schedules[dayOfWeek];
+            if (!Array.isArray(originalSchedules)) {
+                console.warn(`スケジュールが配列ではありません:`, originalSchedules);
+                return { next: null, following: null, final: null };
+            }
+
             const upcomingBuses = [];
-            for (const schedule of schedules) {
+            for (const schedule of originalSchedules) {
+                if (!schedule.time) continue;
+                
                 const [hour, minute] = schedule.time.split(':').map(Number);
                 const busTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
 
@@ -171,12 +184,12 @@
                     upcomingBuses.push({
                         busTime: busTime,
                         time: schedule.time,
-                        is_direct: schedule.is_direct
+                        is_direct: schedule.is_direct || false
                     });
                 }
             }
             
-            const finalBusTime = schedules.length > 0 ? schedules[schedules.length - 1].time : null;
+            const finalBusTime = originalSchedules.length > 0 ? originalSchedules[originalSchedules.length - 1].time : null;
 
             return {
                 next: upcomingBuses[0] || null,
