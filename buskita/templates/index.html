@@ -99,6 +99,21 @@
                     maxZoom: 20, 
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }
+            },
+            {
+                url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+                options: { 
+                    maxZoom: 20, 
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    subdomains: 'abcd'
+                }
+            },
+            {
+                url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+                options: { 
+                    maxZoom: 20, 
+                    attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
+                }
             }
         ];
 
@@ -134,10 +149,11 @@
             const mapContainer = document.getElementById('map-container');
             mapContainer.innerHTML = `
                 <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background-color: #f8f9fa;">
-                    <div style="text-align: center; padding: 40px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; padding: 40px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 600px;">
                         <div style="font-size: 48px; margin-bottom: 20px;">🗺️</div>
                         <h2 style="color: #dc3545; margin-bottom: 20px;">地図の表示に失敗しました</h2>
                         <p style="color: #666; margin-bottom: 20px;">VPN環境内のサーバーから外部の地図サービスにアクセスできない可能性があります。</p>
+                        
                         <div style="background-color: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin: 20px 0; text-align: left;">
                             <h4 style="color: #007bff; margin-top: 0;">解決方法</h4>
                             <ul style="margin: 0; padding-left: 20px;">
@@ -146,7 +162,20 @@
                                 <li>ネットワーク管理者に地図サービスへのアクセス制限解除を依頼</li>
                             </ul>
                         </div>
-                        <p style="color: #666; font-size: 14px;">バス位置情報と時刻表機能は正常に動作します。</p>
+                        
+                        <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; text-align: left;">
+                            <h4 style="color: #856404; margin-top: 0;">代替機能</h4>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li><strong>バス位置情報:</strong> 地図なしでもバスの位置情報は正常に動作します</li>
+                                <li><strong>時刻表機能:</strong> <a href="/timetable" style="color: #007bff;">時刻表ページ</a>は地図に依存しないため正常に動作します</li>
+                                <li><strong>リアルタイム更新:</strong> バス情報は3秒ごとに更新されます</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="margin-top: 20px;">
+                            <a href="/timetable" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">時刻表を見る</a>
+                            <button onclick="location.reload()" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">再読み込み</button>
+                        </div>
                     </div>
                 </div>
             `;
