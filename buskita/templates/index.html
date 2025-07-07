@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryukoku Bus Navi</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        .legend { position: absolute; bottom: 20px; right: 20px; z-index: 1000; padding: 10px; background-color: rgba(255, 255, 255, 0.9); border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,0.4); width: 220px; }
+        .legend h4 { margin: 0 0 10px 0; cursor: pointer; font-size: 16px; text-align: center; }
+        .legend .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
+        .legend .color-box { width: 18px; height: 18px; margin-right: 8px; border: 1px solid #777; }
+        .custom-div-icon i { -webkit-text-stroke: 1px white; }
+    </style>
+</head>
+<body>
+    <div id="map-container">
+        <div id="loading-overlay">
+            <div class="spinner"></div>
+        </div>
+        <div id="map"></div>
+        <div id="legend" class="legend">
+            <h4 id="legend-title">凡例 <i class="fa-solid fa-caret-down"></i></h4>
+            <div id="legend-details" style="display: none;">
+                <div class="legend-item"><div class="color-box" style="background-color: #007bff;"></div>ソロ席も余裕。快適すぎ</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #28a745;"></div>全然座れる。勝ち確</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #ffc107;"></div>ちょい混み。コミュ力試される</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #dc3545;"></div>満員。今日のバスはパーリナイ</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #000000;"></div>…見なかったことにしよ</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #6c757d;"></div>不明</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        <header>
+            <h1><i class="fa-solid fa-bus"></i> Ryukoku Bus Navi</h1>
+        </header>
+        <div class="dashboard-menu">
+            <a href="/timetable" class="menu-item">
+                <i class="fa-solid fa-table-list"></i>
+                <span>時刻表</span>
+            </a>
+        </div>
+        <div class="content">
+            <div id="dashboard-section-countdown" class="dashboard-section">
+                <div class="countdown-group">
+                    <h5 class="countdown-title">
+                        <i class="fa-solid fa-graduation-cap"></i> 龍谷大学行き
+                    </h5>
+                    <div id="countdown-seta_to_univ">
+                        <div class="no-bus-info">情報を取得中...</div>
+                    </div>
+                </div>
+                <div class="countdown-group">
+                    <h5 class="countdown-title">
+                        <i class="fa-solid fa-train"></i> 瀬田駅行き
+                    </h5>
+                    <div id="countdown-univ_to_seta">
+                        <div class="no-bus-info">情報を取得中...</div>
+                    </div>
+                </div>
+            </div>
+            <div id="dashboard-section-summary" class="dashboard-section">
+                <h5><i class="fa-solid fa-bus-simple"></i> 最終バス</h5>
+                <div class="final-bus-grid">
+                    <span class="final-bus-label">大学行き:</span> <span id="final-bus-seta_to_univ">--:--</span>
+                    <span class="final-bus-label">瀬田駅行き:</span> <span id="final-bus-univ_to_seta">--:--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const map = L.map('map').setView([34.98, 135.95], 14);
+        L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', { maxZoom: 20, attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors' }).addTo(map);
+        let busMarkers = {};
+        function getOccupancyStyle(p) { if (p === null) return { color: '#6c757d' }; if (p <= 10) return { color: '#007bff' }; if (p <= 20) return { color: '#28a745' }; if (p <= 30) return { color: '#ffc107' }; if (p <= 39) return { color: '#dc3545' }; return { color: '#000000' }; }
+        function createBusIcon(p) { const s = getOccupancyStyle(p); return L.divIcon({ className: 'custom-div-icon', html: `<i class="fa-solid fa-bus fa-2x" style="color: ${s.color}; -webkit-text-stroke: 1px white;"></i>`, iconSize: [32, 32], iconAnchor: [16, 16] }); }
+        function getLandmarkIcon(l) { let i = 'fa-solid fa-map-marker-alt', c = '#333'; if (l.type === 'university') { i = 'fa-solid fa-graduation-cap'; c = '#800000'; } else if (l.type === 'station') { i = 'fa-solid fa-train'; c = '#008080'; } return L.divIcon({ className: 'custom-div-icon', html: `<i class="${i} fa-2x" style="color: ${c}; -webkit-text-stroke: 1px white;"></i>`, iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }); }
+        function loadLandmarks() { fetch('/api/landmarks').then(r => r.json()).then(l => l.forEach(d => L.marker([d.lat, d.lng], { icon: getLandmarkIcon(d) }).addTo(map).bindPopup(`<b>${d.name}</b>`))); }
+        
+        let isFirstLoad = true;
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        function updateBusLocations() { 
+            fetch('/api/bus_locations')
+                .then(r => r.json())
+                .then(d => { 
+                    const b = d.buses, u = new Set(); 
+                    if (!b) return; 
+                    b.forEach(i => { 
+                        if (typeof i.lat !== 'number' || typeof i.lng !== 'number') return; 
+                        const id = i.id; 
+                        u.add(id); 
+                        const ll = [i.lat, i.lng]; 
+                        let dt = '情報なし'; 
+                        if (i.delayMinutes !== null) dt = i.delayMinutes <= 0 ? 'ほぼ定刻' : `${i.delayMinutes}分遅れ`; 
+                        const dest = i.dest || '情報なし';
+                        const passengerCount = i.passenger;
+                        const pt = passengerCount !== null ? `${passengerCount}人` : '情報なし';
+                        const pc = `<div style="line-height: 1.8; font-size: 14px; min-width: 160px;"><div style="margin-bottom: 5px;"><strong>行き先:</strong> <span style="white-space: normal;">${dest}</span></div><hr style="margin: 8px 0; border: none; border-top: 1px solid #ddd;"><div style="margin-top: 8px;"><strong>遅延:</strong> ${dt}</div><div style="margin-top: 4px;"><strong>乗客数:</strong> ${pt}</div></div>`; 
+                        if (busMarkers[id]) {
+                            busMarkers[id].setLatLng(ll).setPopupContent(pc).setIcon(createBusIcon(passengerCount));
+                        } else {
+                            busMarkers[id] = L.marker(ll, { icon: createBusIcon(passengerCount) }).addTo(map).bindPopup(pc); 
+                        }
+                    }); 
+                    for (const id in busMarkers) {
+                        if (!u.has(parseInt(id, 10))) { 
+                            map.removeLayer(busMarkers[id]); 
+                            delete busMarkers[id]; 
+                        }
+                    }
+                })
+                .catch(e => console.error('【情報更新】エラー:', e))
+                .finally(() => {
+                    if (isFirstLoad) {
+                        loadingOverlay.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingOverlay.style.display = 'none';
+                        }, 500); // transitionの時間と合わせる
+                        isFirstLoad = false;
+                    }
+                }); 
+        }
+
+        setInterval(updateBusLocations, 3000);
+        updateBusLocations();
+        loadLandmarks();
+        
+        // --- Dashboard Logic ---
+        let timetableData = {};
+        let lastBusInfo = {};
+
+        // --- データ取得 ---
+        async function fetchTimetable() {
+            try {
+                const response = await fetch('/api/timetable_data');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                timetableData = await response.json();
+                console.log("時刻表データを取得しました:", timetableData);
+                updateDashboard();
+            } catch (e) {
+                console.error("時刻表データの取得に失敗しました:", e);
+                const dashboard = document.getElementById('dashboard-content');
+                dashboard.innerHTML = '<p class="error">時刻表データを読み込めませんでした。後ほど再読み込みしてください。</p>';
+            }
+        }
+
+        function findNextBus(direction, dayOfWeek) {
+            const now = new Date();
+            const schedules = timetableData[direction]?.schedules?.[dayOfWeek];
+
+            if (!schedules) {
+                console.warn(`スケジュールが見つかりません: direction=${direction}, dayOfWeek=${dayOfWeek}`);
+                return { next: null, following: null, final: null };
+            }
+
+            const upcomingBuses = [];
+            for (const schedule of schedules) {
+                const [hour, minute] = schedule.time.split(':').map(Number);
+                const busTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
+
+                if (busTime > now) {
+                    upcomingBuses.push({
+                        busTime: busTime,
+                        time: schedule.time,
+                        is_direct: schedule.is_direct
+                    });
+                }
+            }
+            
+            const finalBusTime = schedules.length > 0 ? schedules[schedules.length - 1].time : null;
+
+            return {
+                next: upcomingBuses[0] || null,
+                following: upcomingBuses[1] || null,
+                final: finalBusTime
+            };
+        }
+
+        function updateDashboard() {
+            const now = new Date();
+            const dayOfWeek = getDayOfWeek(now);
+
+            updateDirection('seta_to_univ', dayOfWeek);
+            updateDirection('univ_to_seta', dayOfWeek);
+        }
+
+        function updateDirection(direction, dayOfWeek) {
+            const busInfo = findNextBus(direction, dayOfWeek);
+            const countdownContainer = document.getElementById(`countdown-${direction}`);
+            const now = new Date();
+
+            if (busInfo.next) {
+                const diffNext = busInfo.next.busTime - now;
+                const minsNext = Math.ceil(diffNext / 60000);
+                const countdownTextNext = diffNext < 60000 ? `<span class="imminent">まもなく</span>` : `${minsNext}分後`;
+
+                const nextBusHtml = `
+                    <div class="countdown-item">
+                        <span class="departure-time">${busInfo.next.time} 発 ${busInfo.next.is_direct ? '<span class="direct-tag">直</span>' : ''}</span>
+                        <span class="time">${countdownTextNext}</span>
+                    </div>`;
+
+                let followingBusHtml = '';
+                if (busInfo.following) {
+                    const diffFollowing = busInfo.following.busTime - now;
+                    const minsFollowing = Math.ceil(diffFollowing / 60000);
+                    const countdownTextFollowing = `${minsFollowing}分後`;
+
+                    followingBusHtml = `
+                        <div class="countdown-item secondary">
+                             <span class="departure-time">${busInfo.following.time} 発 ${busInfo.following.is_direct ? '<span class="direct-tag">直</span>' : ''}</span>
+                             <span class="time">${countdownTextFollowing}</span>
+                        </div>`;
+                }
+                
+                countdownContainer.innerHTML = nextBusHtml + followingBusHtml;
+            } else {
+                countdownContainer.innerHTML = `<div class="no-bus-info">本日の運行は終了しました</div>`;
+            }
+            
+            const finalBusElement = document.getElementById(`final-bus-${direction}`);
+            if (busInfo.final) {
+                finalBusElement.textContent = busInfo.final;
+            } else {
+                finalBusElement.textContent = "---";
+            }
+        }
+
+        function getDayOfWeek(date) {
+            const day = date.getDay();
+            return (day === 0) ? 'holidays' : (day === 6) ? 'saturdays' : 'weekdays';
+        }
+
+        // 初期化処理
+        fetchTimetable();
+        setInterval(updateDashboard, 1000); // 1秒ごとにダッシュボードを更新
+
+        const legendTitle = document.getElementById('legend-title');
+        const legendDetails = document.getElementById('legend-details');
+        legendTitle.addEventListener('click', () => {
+            const isHidden = legendDetails.style.display === 'none';
+            legendDetails.style.display = isHidden ? 'block' : 'none';
+            legendTitle.querySelector('i').className = isHidden ? 'fa-solid fa-caret-up' : 'fa-solid fa-caret-down';
+        });
+    </script>
+</body>
+</html> 

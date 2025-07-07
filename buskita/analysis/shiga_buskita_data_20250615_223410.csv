@@ -1,0 +1,10 @@
+﻿type,selector,text,timestamp,attributes
+route,"[class*=""bus""]",マイバス,2025-06-15T22:34:05.833629,
+route,li,出発地出発地をえらぶ,2025-06-15T22:34:05.875792,
+route,li,到着地到着地をえらぶ,2025-06-15T22:34:05.877387,
+route,li,ON,2025-06-15T22:34:05.878905,
+route,li,OFF,2025-06-15T22:34:05.880542,
+route,li,出発,2025-06-15T22:34:05.882267,
+stop,button,完了,2025-06-15T22:34:05.891084,
+stop,button,現在時刻,2025-06-15T22:34:05.892346,
+map_element,"[class*=""map""]",,2025-06-15T22:34:05.898447,footer_menu_map
