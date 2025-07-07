@@ -1,0 +1,921 @@
+{
+  "bus_endpoint_variations": {
+    "標準パラメータ": {
+      "isCached": true,
+      "bus": [],
+      "language": 1
+    },
+    "workNo なし": null,
+    "workNo 空文字": null,
+    "workNo 数値": {
+      "isCached": true,
+      "bus": [],
+      "language": 1
+    },
+    "routeNo指定": null,
+    "busStopNo指定": null,
+    "companyNo指定": null,
+    "現在時刻指定": null,
+    "日付指定": null,
+    "位置指定": null,
+    "範囲指定": null,
+    "サイトID=1": {
+      "isCached": true,
+      "bus": [],
+      "language": 1
+    },
+    "サイトID=3": {
+      "isCached": true,
+      "bus": [],
+      "language": 1
+    }
+  },
+  "potential_endpoints": {
+    "get-buses": {
+      "siteId": 9,
+      "buses": [
+        {
+          "workNo": 499105,
+          "position": {
+            "latitude": 35.016846666667,
+            "longitude": 135.97369
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 7,
+          "capacity": 21,
+          "color": null,
+          "passenger": 5,
+          "occupancyStatus": 2,
+          "device_uid": "tkt_1371",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 290,
+          "endBusStopNo": 290,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "83 クレハ前・目川住宅経由 草津駅行き",
+            "2": "ogaki junkan line",
+            "3": "小柿循环线",
+            "4": "小柿循環線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 499170,
+          "position": {
+            "latitude": 34.977925,
+            "longitude": 135.95209333333
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 2,
+          "capacity": 28,
+          "color": null,
+          "passenger": 16,
+          "occupancyStatus": 4,
+          "device_uid": "tkt_1178",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 208,
+          "endBusStopNo": 209,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "321 びわ湖レストタウン・カネボウベルパーク経由 瀬田駅行き",
+            "2": "seta・idai（resuto）",
+            "3": "濑田·医大（休闲）",
+            "4": "瀨田·醫大（休閒）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 499261,
+          "position": {
+            "latitude": 35.00625,
+            "longitude": 135.93983833333
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 0,
+          "capacity": 11,
+          "color": null,
+          "passenger": 8,
+          "occupancyStatus": 5,
+          "device_uid": "tkt_380",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 419,
+          "endBusStopNo": 208,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "（まめバス）草津市役所・南草津駅・草津養護学校経由 大学病院行き",
+            "2": "kusatsu・minamikusatsu",
+            "3": "草津·南草津",
+            "4": "草津·南草津",
+            "5": null
+          }
+        },
+        {
+          "workNo": 499648,
+          "position": {
+            "latitude": 34.991601666667,
+            "longitude": 135.95220833333
+          },
+          "companyNo": "tkt",
+          "barrierFree": false,
+          "delayMinutes": 1,
+          "capacity": 0,
+          "color": null,
+          "passenger": 20,
+          "occupancyStatus": 0,
+          "device_uid": "tkt_1483",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 259,
+          "endBusStopNo": 250,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "162 パナソニック東口経由 南草津駅行き",
+            "2": "minamikusatsu～panasonitkuminamimon",
+            "3": "南草津～松下南门",
+            "4": "南草津～松下南門",
+            "5": null
+          }
+        },
+        {
+          "workNo": 499728,
+          "position": {
+            "latitude": 35.004595,
+            "longitude": 135.97596333333
+          },
+          "companyNo": "tkt",
+          "barrierFree": false,
+          "delayMinutes": 13,
+          "capacity": 0,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 0,
+          "device_uid": "tkt_1481",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 290,
+          "endBusStopNo": 287,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "153 青地・ダイキン・青山五丁目経由 上桐生行き",
+            "2": "153 Aoji/Daikin/Aoyama 5 chome",
+            "3": "153 青地/Daikin/青山5丁目",
+            "4": "153 青地/Daikin/青山5丁目",
+            "5": null
+          }
+        },
+        {
+          "workNo": 499737,
+          "position": {
+            "latitude": 34.978715,
+            "longitude": 135.902095
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": -4,
+          "capacity": 27,
+          "color": null,
+          "passenger": 21,
+          "occupancyStatus": 5,
+          "device_uid": "tkt_762",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 118,
+          "endBusStopNo": 139,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "40 太子・東急団地入口経由 田上車庫前行き",
+            "2": "ishiyama・tagamishako（ta・momiji）",
+            "3": "石山·田上车库（太·红叶）",
+            "4": "石山·田上車庫（太·紅葉）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 499893,
+          "position": {
+            "latitude": 35.029218333333,
+            "longitude": 135.98755833333
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 36,
+          "capacity": 11,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_418",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 395,
+          "endBusStopNo": 290,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "（くりちゃんバス）栗東市役所・手原駅・積水化学前・栗東駅東口・中沢経由 草津駅行き",
+            "2": "kusatsu・nagoyaka line",
+            "3": "草津·祥和线",
+            "4": "草津·祥和線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 499917,
+          "position": {
+            "latitude": 34.944935,
+            "longitude": 135.91613166667
+          },
+          "companyNo": "tkt",
+          "barrierFree": false,
+          "delayMinutes": 6,
+          "capacity": 0,
+          "color": null,
+          "passenger": 7,
+          "occupancyStatus": 0,
+          "device_uid": "tkt_1485",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 118,
+          "endBusStopNo": 139,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "50 石居町・堂橋経由 田上車庫前行き",
+            "2": "ishiyama・tagamishako（ishizuecho）",
+            "3": "石山·田上车库（石居町）",
+            "4": "石山·田上車庫（石居町）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 499996,
+          "position": {
+            "latitude": 34.985741666667,
+            "longitude": 135.93139
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 5,
+          "capacity": 26,
+          "color": null,
+          "passenger": 16,
+          "occupancyStatus": 5,
+          "device_uid": "tkt_759",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 209,
+          "endBusStopNo": 216,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "21 小松原・カネボウベルパーク経由 びわ湖レストタウン行き",
+            "2": "resutotaun line",
+            "3": "休闲小镇线",
+            "4": "休閒小鎮線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 500131,
+          "position": {
+            "latitude": 34.97284,
+            "longitude": 135.95206833333
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": -4,
+          "capacity": 26,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_760",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 208,
+          "endBusStopNo": 209,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "301 滋賀アリーナ・東大津高校・医大西門・瀬田公園経由 瀬田駅行き",
+            "2": "seta・idai line",
+            "3": "濑田·医大线",
+            "4": "瀨田·醫大線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 500292,
+          "position": {
+            "latitude": 34.927401666667,
+            "longitude": 135.92049166667
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 15,
+          "capacity": 28,
+          "color": null,
+          "passenger": 11,
+          "occupancyStatus": 3,
+          "device_uid": "tkt_1348",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 118,
+          "endBusStopNo": 160,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "140 太子・もみじが丘経由 アルプス登山口行き",
+            "2": "ishiyama・tozanguchi（momiji）",
+            "3": "石山·登山口（红叶）",
+            "4": "石山·登山口（紅葉）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 500360,
+          "position": {
+            "latitude": 35.025928333333,
+            "longitude": 135.99110333333
+          },
+          "companyNo": "tkt",
+          "barrierFree": false,
+          "delayMinutes": 17,
+          "capacity": 11,
+          "color": null,
+          "passenger": 1,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_770",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 290,
+          "endBusStopNo": 340,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "（くりちゃんバス）中沢・栗東駅東口・積水化学前・手原駅経由 栗東市役所行き",
+            "2": "kusatsu・shiyakusho line",
+            "3": "草津·市役所线",
+            "4": "草津·市役所線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 500416,
+          "position": {
+            "latitude": 35.019663333333,
+            "longitude": 135.96967333333
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 1,
+          "capacity": 29,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_1101",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 290,
+          "endBusStopNo": 484,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "753 追分口・青地・馬場経由 上馬場ダイキン東行き",
+            "2": "Kusatsu eki～Kami bamba daikin higashi",
+            "3": "草津站～上马场大金工业东",
+            "4": "草津站～上馬場大金工業東",
+            "5": null
+          }
+        },
+        {
+          "workNo": 500484,
+          "position": {
+            "latitude": 34.97998,
+            "longitude": 135.931595
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 2,
+          "capacity": 26,
+          "color": null,
+          "passenger": 8,
+          "occupancyStatus": 2,
+          "device_uid": "tkt_763",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016752,
+          "startBusStopNo": 209,
+          "endBusStopNo": 208,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "311 龍谷大学経由 大学病院行き",
+            "2": "idai～ryudai～setaeki",
+            "3": "医大～龙大～濑田站",
+            "4": "醫大～龍大～瀨田站",
+            "5": null
+          }
+        },
+        {
+          "workNo": 500565,
+          "position": {
+            "latitude": 35.003736666667,
+            "longitude": 135.946365
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": -3,
+          "capacity": 11,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_435",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 208,
+          "endBusStopNo": 419,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "（まめバス）草津養護学校・南草津駅・草津市役所経由 草津駅東口行き",
+            "2": "daigakubyoin～minamikusatsunishiguchi",
+            "3": "大学医院～南草津西口",
+            "4": "大學醫院～南草津西口",
+            "5": null
+          }
+        },
+        {
+          "workNo": 500614,
+          "position": {
+            "latitude": 35.016221666667,
+            "longitude": 135.98913
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 1,
+          "capacity": 8,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_255",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 348,
+          "endBusStopNo": 330,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "（くりちゃんバス）手原駅・なごやかセンター・栗東市役所経由 コミュニティセンター金勝行き",
+            "2": "haruda・kinsho line",
+            "3": "治田·金胜线",
+            "4": "治田·金勝線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 500978,
+          "position": {
+            "latitude": 34.97313,
+            "longitude": 135.96734333333
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 9,
+          "capacity": 29,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_1077",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 250,
+          "endBusStopNo": 237,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "72 かがやき通り経由 松が丘五丁目行き",
+            "2": "minamikusatsueki～matsugaoka-gochome（kagayaki）",
+            "3": "南草津站～松之丘5丁目（辉）",
+            "4": "南草津站～松之丘五丁目（輝）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501250,
+          "position": {
+            "latitude": 35.004701666667,
+            "longitude": 135.97569166667
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 3,
+          "capacity": 26,
+          "color": null,
+          "passenger": 20,
+          "occupancyStatus": 5,
+          "device_uid": "tkt_1123",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 308,
+          "endBusStopNo": 290,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "453 山寺・青地経由 草津駅行き",
+            "2": "kusatsushako line",
+            "3": "草津车库线",
+            "4": "草津車庫線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501278,
+          "position": {
+            "latitude": 34.979418333333,
+            "longitude": 135.901045
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": -4,
+          "capacity": 28,
+          "color": null,
+          "passenger": 16,
+          "occupancyStatus": 4,
+          "device_uid": "tkt_1141",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 118,
+          "endBusStopNo": 118,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "120 晴園寮・永大団地経由 石山駅行き",
+            "2": "yakeno line",
+            "3": "烧野线",
+            "4": "燒野線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501435,
+          "position": {
+            "latitude": 35.01226,
+            "longitude": 135.962085
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 8,
+          "capacity": 17,
+          "color": null,
+          "passenger": 16,
+          "occupancyStatus": 6,
+          "device_uid": "tkt_402",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 298,
+          "endBusStopNo": 290,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "253 川重冷熱経由 草津駅行き",
+            "2": "rokuhaso",
+            "3": "六波庄",
+            "4": "六波莊",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501490,
+          "position": {
+            "latitude": 34.991581666667,
+            "longitude": 135.98211166667
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 14,
+          "capacity": 27,
+          "color": null,
+          "passenger": 8,
+          "occupancyStatus": 2,
+          "device_uid": "tkt_1375",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 287,
+          "endBusStopNo": 290,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "153 青山五丁目・工業団地・青地経由 草津駅行き",
+            "2": "153 Aoyama/Kougyo danchi/Wakakusa Chuo dori",
+            "3": "153 青山5丁目/工业园区/青地",
+            "4": "153 青山5丁目/工業園區/青地",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501581,
+          "position": {
+            "latitude": 34.965208333333,
+            "longitude": 135.94162833333
+          },
+          "companyNo": "tkt",
+          "barrierFree": false,
+          "delayMinutes": -3,
+          "capacity": 40,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_966",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 182,
+          "endBusStopNo": 209,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "211 直行 瀬田駅行き",
+            "2": "seta～ryukoku daigaku（Direct）",
+            "3": "瀨田·龍谷大學（直達）",
+            "4": "濑田·龙谷大学（直达）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501590,
+          "position": {
+            "latitude": 34.973851666667,
+            "longitude": 135.95416
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 1,
+          "capacity": 26,
+          "color": null,
+          "passenger": 1,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_1124",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 264,
+          "endBusStopNo": 250,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "122 大学病院・パナソニック南門経由 南草津駅行き",
+            "2": "yogo～minamikusatsu（idai・choju）",
+            "3": "特殊教育～南草津（医大・长寿）",
+            "4": "特殊教育～南草津（醫大・長壽）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501875,
+          "position": {
+            "latitude": 35.017135,
+            "longitude": 136.01043166667
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 2,
+          "capacity": 29,
+          "color": null,
+          "passenger": 3,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_1040",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 330,
+          "endBusStopNo": 290,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "113 赤坂団地・栗東ニューハイツ・図書館経由 草津駅行き",
+            "2": "kusatsueki～kinsho",
+            "3": "草津～金胜",
+            "4": "草津～金勝",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501937,
+          "position": {
+            "latitude": 34.972583333333,
+            "longitude": 135.94279
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 2,
+          "capacity": 28,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_1316",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 209,
+          "endBusStopNo": 234,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "21 小松原・カネボウベルパーク・びわ湖レストタウン経由 長寿社会福祉センター行き",
+            "2": "seta・chojushakai（resuto）",
+            "3": "濑田·长寿社会（休闲）",
+            "4": "瀨田·長壽社會（休閒）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 501994,
+          "position": {
+            "latitude": 34.967995,
+            "longitude": 135.906435
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 1,
+          "capacity": 28,
+          "color": null,
+          "passenger": 9,
+          "occupancyStatus": 3,
+          "device_uid": "tkt_1109",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 139,
+          "endBusStopNo": 118,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "40 東急団地入口・関の津通過・太子・橋本経由 石山駅行き",
+            "2": "ishiyama・tagamishako（momiji・dai）",
+            "3": "石山·田上車庫（紅葉·大）",
+            "4": "石山·田上车库（红叶·大）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 502061,
+          "position": {
+            "latitude": 34.972675,
+            "longitude": 135.90774
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": 15,
+          "capacity": 29,
+          "color": null,
+          "passenger": 15,
+          "occupancyStatus": 4,
+          "device_uid": "tkt_1078",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 139,
+          "endBusStopNo": 118,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "40 東急団地入口・関の津通過・太子・橋本経由 石山駅行き",
+            "2": "ishiyama・tagamishako（momiji・dai）",
+            "3": "石山·田上車庫（紅葉·大）",
+            "4": "石山·田上车库（红叶·大）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 502087,
+          "position": {
+            "latitude": 34.97703,
+            "longitude": 135.93409666667
+          },
+          "companyNo": "tkt",
+          "barrierFree": true,
+          "delayMinutes": -2,
+          "capacity": 29,
+          "color": null,
+          "passenger": 17,
+          "occupancyStatus": 4,
+          "device_uid": "tkt_1377",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016753,
+          "startBusStopNo": 182,
+          "endBusStopNo": 209,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "211 直行 瀬田駅行き",
+            "2": "seta～ryukoku daigaku（Direct）",
+            "3": "瀨田·龍谷大學（直達）",
+            "4": "濑田·龙谷大学（直达）",
+            "5": null
+          }
+        },
+        {
+          "workNo": 502232,
+          "position": {
+            "latitude": 34.97931,
+            "longitude": 135.97049
+          },
+          "companyNo": "tkt",
+          "barrierFree": false,
+          "delayMinutes": 18,
+          "capacity": 39,
+          "color": null,
+          "passenger": 0,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_950",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 290,
+          "endBusStopNo": 230,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "53 青地・ダイキン・若草中央通り経由 青山五丁目行き",
+            "2": "53 Aoji/Daikin/Wakakusa Chuo dori",
+            "3": "53 青地 / Daikin / 若草中央通",
+            "4": "53 青地 / Daikin / 若草中央通",
+            "5": null
+          }
+        },
+        {
+          "workNo": 502403,
+          "position": {
+            "latitude": 35.01342,
+            "longitude": 135.97512333333
+          },
+          "companyNo": "tkt",
+          "barrierFree": false,
+          "delayMinutes": 6,
+          "capacity": 16,
+          "color": null,
+          "passenger": 3,
+          "occupancyStatus": 1,
+          "device_uid": "tkt_178",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 290,
+          "endBusStopNo": 290,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "413 岡・栗東中学校・栗東運動公園経由 草津駅行き",
+            "2": "ritto shiyakusho junkan line",
+            "3": "栗东市役所循环线",
+            "4": "栗東市役所循環線",
+            "5": null
+          }
+        },
+        {
+          "workNo": 502410,
+          "position": {
+            "latitude": 35.01165,
+            "longitude": 136.00651833333
+          },
+          "companyNo": "tkt",
+          "barrierFree": false,
+          "delayMinutes": 13,
+          "capacity": 0,
+          "color": null,
+          "passenger": 7,
+          "occupancyStatus": 0,
+          "device_uid": "tkt_1455",
+          "device_options": null,
+          "temporaryBus": 0,
+          "displayExpirationTime": 1751016754,
+          "startBusStopNo": 290,
+          "endBusStopNo": 330,
+          "airportFlag": 0,
+          "routeNames": {
+            "1": "113 図書館・栗東ニューハイツ・トレセン西住宅経由 コミュニティセンター金勝行き",
+            "2": "kusatsueki～kinsho",
+            "3": "草津～金胜",
+            "4": "草津～金勝",
+            "5": null
+          }
+        }
+      ]
+    },
+    "get-bus-list": null,
+    "get-bus-info": null,
+    "get-bus-status": null,
+    "get-active-buses": null,
+    "get-running-buses": null,
+    "get-routes": null,
+    "get-route-buses": null,
+    "get-bus-routes": null,
+    "get-busstops": null,
+    "get-busstop-buses": null,
+    "get-timetable": null,
+    "get-schedule": null,
+    "get-bus-schedule": null
+  }
+}

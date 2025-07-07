@@ -1,0 +1,560 @@
+[
+  {
+    "workNo": 120938,
+    "position": {
+      "latitude": 35.004588333333,
+      "longitude": 135.99049833333
+    },
+    "companyNo": "tkt",
+    "barrierFree": false,
+    "delayMinutes": 2,
+    "capacity": 39,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_950",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864627,
+    "startBusStopNo": 290,
+    "endBusStopNo": 287,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "153 草津市役所経由 上桐生行き",
+      "2": "kamikiryu line（shiyakusho）",
+      "3": "上桐生线（市役所）",
+      "4": "上桐生線（市役所）",
+      "5": null
+    },
+    "routeNumber": "153 草津市役所経由 上桐生行き",
+    "startBusstopId": 290,
+    "goalBusstopId": 287
+  },
+  {
+    "workNo": 121105,
+    "position": {
+      "latitude": 35.02957,
+      "longitude": 135.99479666667
+    },
+    "companyNo": "tkt",
+    "barrierFree": false,
+    "delayMinutes": 3,
+    "capacity": 11,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_770",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864778,
+    "startBusStopNo": 290,
+    "endBusStopNo": 396,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "（くりちゃんバス）中沢・栗東駅東口・手原駅・栗東市役所経由 なごやかセンター行き",
+      "2": "kusatsu・nagoyaka line（tsuka）",
+      "3": "草津·祥和线（不停）",
+      "4": "草津·祥和線（不停）",
+      "5": null
+    },
+    "routeNumber": "（くりちゃんバス）中沢・栗東駅東口・手原駅・栗東市役所経由 なごやかセンター行き",
+    "startBusstopId": 290,
+    "goalBusstopId": 396
+  },
+  {
+    "workNo": 121118,
+    "position": {
+      "latitude": 34.97089,
+      "longitude": 135.93643833333
+    },
+    "companyNo": "tkt",
+    "barrierFree": false,
+    "delayMinutes": 2,
+    "capacity": 0,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 0,
+    "device_uid": "tkt_1487",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864778,
+    "startBusStopNo": 209,
+    "endBusStopNo": 181,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "111 龍谷大学・県立アイスアリーナ経由 大津市公設市場行き",
+      "2": "seta・ichiba（ryudai) line",
+      "3": "濑田·市场（龙大）线",
+      "4": "瀨田·市場（龍大）線",
+      "5": null
+    },
+    "routeNumber": "111 龍谷大学・県立アイスアリーナ経由 大津市公設市場行き",
+    "startBusstopId": 209,
+    "goalBusstopId": 181
+  },
+  {
+    "workNo": 121247,
+    "position": {
+      "latitude": 34.988451666667,
+      "longitude": 135.95572666667
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": 4,
+    "capacity": 29,
+    "color": null,
+    "passenger": 5,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1255",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 250,
+    "endBusStopNo": 230,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "282 パナソニック東口・桜ヶ丘経由 青山五丁目行き",
+      "2": "minamikusatsu～aoyama gochome（sakuragaoka）",
+      "3": "南草津～青山（樱之丘）",
+      "4": "南草津～青山五丁目（櫻之丘）",
+      "5": null
+    },
+    "routeNumber": "282 パナソニック東口・桜ヶ丘経由 青山五丁目行き",
+    "startBusstopId": 250,
+    "goalBusstopId": 230
+  },
+  {
+    "workNo": 121307,
+    "position": {
+      "latitude": 34.988868333333,
+      "longitude": 135.97630666667
+    },
+    "companyNo": "tkt",
+    "barrierFree": false,
+    "delayMinutes": 11,
+    "capacity": 0,
+    "color": null,
+    "passenger": 4,
+    "occupancyStatus": 0,
+    "device_uid": "tkt_1445",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864776,
+    "startBusStopNo": 290,
+    "endBusStopNo": 230,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "153 草津市役所経由 青山五丁目行き",
+      "2": "gurin line（shiyakusho）",
+      "3": "绿色线（市役所）",
+      "4": "綠色線（市役所）",
+      "5": null
+    },
+    "routeNumber": "153 草津市役所経由 青山五丁目行き",
+    "startBusstopId": 290,
+    "goalBusstopId": 230
+  },
+  {
+    "workNo": 121747,
+    "position": {
+      "latitude": 35.032601666667,
+      "longitude": 136.002175
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": -4,
+    "capacity": 11,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_418",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 348,
+    "endBusStopNo": 330,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "（くりちゃんバス）手原駅・なごやかセンター・栗東市役所経由 コミュニティセンター金勝行き",
+      "2": "haruda・kinsho line",
+      "3": "治田·金胜线",
+      "4": "治田·金勝線",
+      "5": null
+    },
+    "routeNumber": "（くりちゃんバス）手原駅・なごやかセンター・栗東市役所経由 コミュニティセンター金勝行き",
+    "startBusstopId": 348,
+    "goalBusstopId": 330
+  },
+  {
+    "workNo": 121893,
+    "position": {
+      "latitude": 34.98644,
+      "longitude": 135.92933666667
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": 1,
+    "capacity": 29,
+    "color": null,
+    "passenger": 3,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1082",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864778,
+    "startBusStopNo": 234,
+    "endBusStopNo": 209,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "21 びわ湖レストタウン・カネボウベルパーク・小松原経由 瀬田駅行き",
+      "2": "seta・chojushakai（resuto）",
+      "3": "濑田·长寿社会（休闲）",
+      "4": "瀨田·長壽社會（休閒）",
+      "5": null
+    },
+    "routeNumber": "21 びわ湖レストタウン・カネボウベルパーク・小松原経由 瀬田駅行き",
+    "startBusstopId": 234,
+    "goalBusstopId": 209
+  },
+  {
+    "workNo": 121946,
+    "position": {
+      "latitude": 34.967628333333,
+      "longitude": 135.90642333333
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": 1,
+    "capacity": 29,
+    "color": null,
+    "passenger": 4,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1078",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 139,
+    "endBusStopNo": 118,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "40 東急団地入口・関の津通過・太子・橋本経由 石山駅行き",
+      "2": "ishiyama・tagamishako（momiji・dai）",
+      "3": "石山·田上車庫（紅葉·大）",
+      "4": "石山·田上车库（红叶·大）",
+      "5": null
+    },
+    "routeNumber": "40 東急団地入口・関の津通過・太子・橋本経由 石山駅行き",
+    "startBusstopId": 139,
+    "goalBusstopId": 118
+  },
+  {
+    "workNo": 122112,
+    "position": {
+      "latitude": 35.022325,
+      "longitude": 135.96230333333
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": -1,
+    "capacity": 26,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1275",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 290,
+    "endBusStopNo": 328,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "213 図書館・栗東ニューハイツ経由 トレセン西住宅行き",
+      "2": "kusatsueki～nishijutaku①",
+      "3": "草津站～西住宅①",
+      "4": "草津站～西住宅①",
+      "5": null
+    },
+    "routeNumber": "213 図書館・栗東ニューハイツ経由 トレセン西住宅行き",
+    "startBusstopId": 290,
+    "goalBusstopId": 328
+  },
+  {
+    "workNo": 122882,
+    "position": {
+      "latitude": 34.971243333333,
+      "longitude": 135.93661666667
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": 0,
+    "capacity": 26,
+    "color": null,
+    "passenger": 8,
+    "occupancyStatus": 2,
+    "device_uid": "tkt_760",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864778,
+    "startBusStopNo": 208,
+    "endBusStopNo": 209,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "301 東大津高校・医大西門・県立美術館・瀬田公園経由 瀬田駅行き",
+      "2": "301 Seta Station via Higashi Otsu High School/ Idainishimon Bus Stop/ Prefectural Museum of Art/ Seta Park",
+      "3": "301 经由东大津高中、井台西门巴士站、县立美术馆、濑田公园到濑田站",
+      "4": "301 經由東大津高中、井台西門巴士站、縣立美術館、瀨田公園到瀨田站",
+      "5": null
+    },
+    "routeNumber": "301 東大津高校・医大西門・県立美術館・瀬田公園経由 瀬田駅行き",
+    "startBusstopId": 208,
+    "goalBusstopId": 209
+  },
+  {
+    "workNo": 136551,
+    "position": {
+      "latitude": 35.019508333333,
+      "longitude": 135.97806666667
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": 0,
+    "capacity": 14,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1290",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864778,
+    "startBusStopNo": 290,
+    "endBusStopNo": 290,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "83 クレハ前・目川住宅経由 草津駅行き",
+      "2": "ogaki junkan line",
+      "3": "小柿循环线",
+      "4": "小柿循環線",
+      "5": null
+    },
+    "routeNumber": "83 クレハ前・目川住宅経由 草津駅行き",
+    "startBusstopId": 290,
+    "goalBusstopId": 290
+  },
+  {
+    "workNo": 123617,
+    "position": {
+      "latitude": 34.986646666667,
+      "longitude": 135.925395
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": -4,
+    "capacity": 28,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1025",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 209,
+    "endBusStopNo": 208,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "301 瀬田公園・県立美術館・医大西門・東大津高校経由 大学病院行き",
+      "2": "301 University Hospital via Seta Park/ Prefectural Museum of Art/ Medical University West Gate/ Higashi Otsu High School",
+      "3": "301 经由濑田公园/ 县立美术馆，医科大学西门，东大津高中/到大学医院",
+      "4": "301 經由瀨田公園縣立美術館，醫科大學西門，東大津高中/到大學醫院",
+      "5": null
+    },
+    "routeNumber": "301 瀬田公園・県立美術館・医大西門・東大津高校経由 大学病院行き",
+    "startBusstopId": 209,
+    "goalBusstopId": 208
+  },
+  {
+    "workNo": 123794,
+    "position": {
+      "latitude": 34.982071666667,
+      "longitude": 135.891405
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": 0,
+    "capacity": 28,
+    "color": null,
+    "passenger": 3,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1108",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 118,
+    "endBusStopNo": 118,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "120 晴園寮・永大団地経由 石山駅行き",
+      "2": "yakeno line",
+      "3": "烧野线",
+      "4": "燒野線",
+      "5": null
+    },
+    "routeNumber": "120 晴園寮・永大団地経由 石山駅行き",
+    "startBusstopId": 118,
+    "goalBusstopId": 118
+  },
+  {
+    "workNo": 124254,
+    "position": {
+      "latitude": 34.931216666667,
+      "longitude": 135.93977666667
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": -4,
+    "capacity": 26,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_759",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 160,
+    "endBusStopNo": 118,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "130 石居口・稲津経由 石山駅行き",
+      "2": "ishiyama・tozanguchi",
+      "3": "石山·登山口",
+      "4": "石山·登山口",
+      "5": null
+    },
+    "routeNumber": "130 石居口・稲津経由 石山駅行き",
+    "startBusstopId": 160,
+    "goalBusstopId": 118
+  },
+  {
+    "workNo": 132269,
+    "position": {
+      "latitude": 34.979316666667,
+      "longitude": 135.90162833333
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": -4,
+    "capacity": 28,
+    "color": null,
+    "passenger": 8,
+    "occupancyStatus": 2,
+    "device_uid": "tkt_1339",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 118,
+    "endBusStopNo": 139,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "40 太子・東急団地入口経由 田上車庫前行き",
+      "2": "ishiyama・tagamishako（ta・momiji）",
+      "3": "石山·田上车库（太·红叶）",
+      "4": "石山·田上車庫（太·紅葉）",
+      "5": null
+    },
+    "routeNumber": "40 太子・東急団地入口経由 田上車庫前行き",
+    "startBusstopId": 118,
+    "goalBusstopId": 139
+  },
+  {
+    "workNo": 127900,
+    "position": {
+      "latitude": 34.991613333333,
+      "longitude": 135.98247166667
+    },
+    "companyNo": "tkt",
+    "barrierFree": false,
+    "delayMinutes": 0,
+    "capacity": 0,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 0,
+    "device_uid": "tkt_1506",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864778,
+    "startBusStopNo": 287,
+    "endBusStopNo": 290,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "153 グリーンヒル（青山五丁目）・草津市役所経由 草津駅行き",
+      "2": "kamikiryu line（shiyakusho）",
+      "3": "上桐生线（市役所）",
+      "4": "上桐生線（市役所）",
+      "5": null
+    },
+    "routeNumber": "153 グリーンヒル（青山五丁目）・草津市役所経由 草津駅行き",
+    "startBusstopId": 287,
+    "goalBusstopId": 290
+  },
+  {
+    "workNo": 128135,
+    "position": {
+      "latitude": 34.985211666667,
+      "longitude": 135.926145
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": -4,
+    "capacity": 28,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1348",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864777,
+    "startBusStopNo": 209,
+    "endBusStopNo": 182,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "11 瀬田公園経由 龍谷大学行き",
+      "2": "seta・ryudai line",
+      "3": "濑田·龙大线",
+      "4": "瀨田·龍大線",
+      "5": null
+    },
+    "routeNumber": "11 瀬田公園経由 龍谷大学行き",
+    "startBusstopId": 209,
+    "goalBusstopId": 182
+  },
+  {
+    "workNo": 137265,
+    "position": {
+      "latitude": 35.021806666667,
+      "longitude": 135.96186
+    },
+    "companyNo": "tkt",
+    "barrierFree": true,
+    "delayMinutes": -4,
+    "capacity": 29,
+    "color": null,
+    "passenger": 0,
+    "occupancyStatus": 1,
+    "device_uid": "tkt_1040",
+    "device_options": null,
+    "temporaryBus": 0,
+    "displayExpirationTime": 1751864778,
+    "startBusStopNo": 290,
+    "endBusStopNo": 287,
+    "airportFlag": 0,
+    "routeNames": {
+      "1": "153 草津市役所経由 上桐生行き",
+      "2": "kamikiryu line（shiyakusho）",
+      "3": "上桐生线（市役所）",
+      "4": "上桐生線（市役所）",
+      "5": null
+    },
+    "routeNumber": "153 草津市役所経由 上桐生行き",
+    "startBusstopId": 290,
+    "goalBusstopId": 287
+  }
+]
