@@ -67,7 +67,7 @@ def get_bus_details(work_no, api_base_url, site_id, headers):
             if buses:
                 return buses[0]
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching details for workNo {work_no}: {e}")
+        current_app.logger.error(f"Error fetching details for workNo {work_no}: {e}")
     return None
 
 def get_live_bus_data():
@@ -119,10 +119,10 @@ def get_live_bus_data():
         return merged_buses
         
     except requests.exceptions.RequestException as e:
-        print(f"APIリクエストエラー (get-buses): {e}")
+        current_app.logger.error(f"APIリクエストエラー (get-buses): {e}")
         backup_file = current_app.config['BACKUP_FILE']
         if os.path.exists(backup_file):
-            print("バックアップからデータを読み込みます。")
+            current_app.logger.info("バックアップからデータを読み込みます。")
             with open(backup_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
         return []

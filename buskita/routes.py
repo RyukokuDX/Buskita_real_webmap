@@ -1,5 +1,4 @@
 from flask import current_app, jsonify, render_template
-from datetime import datetime
 import json
 import os
 import requests
@@ -18,24 +17,24 @@ def api_bus_locations():
     is_stale = False
 
     if not locations_raw:
-        print(f"[{datetime.now()}] APIから有効なデータが取得できませんでした。バックアップを試みます。")
+        current_app.logger.warning("APIから有効なデータが取得できませんでした。バックアップを試みます。")
         backup_file = current_app.config['BACKUP_FILE']
         if os.path.exists(backup_file):
             try:
                 with open(backup_file, 'r', encoding='utf-8') as f:
                     locations_raw = json.load(f)
                 is_stale = True
-                print(f"[{datetime.now()}] バックアップファイルを使用しました。")
+                current_app.logger.info("バックアップファイルを使用しました。")
             except (json.JSONDecodeError, IOError) as e:
-                print(f"バックアップファイルの読み込みに失敗しました: {e}")
+                current_app.logger.error(f"バックアップファイルの読み込みに失敗しました: {e}")
                 locations_raw = []
         else:
-            print(f"[{datetime.now()}] バックアップファイルが見つかりませんでした。")
+            current_app.logger.warning("バックアップファイルが見つかりませんでした。")
 
     locations = services.filter_and_format_buses(locations_raw)
     
     if not is_stale:
-        print(f"[{datetime.now()}] APIから {len(locations)} 台の有効なバス情報を取得しました。")
+        current_app.logger.info(f"APIから {len(locations)} 台の有効なバス情報を取得しました。")
 
     return jsonify({
         'buses': locations,
@@ -63,7 +62,7 @@ def timetable_page():
             }
             
     except (FileNotFoundError, json.JSONDecodeError) as e:
-        print(f"Error loading timetable: {e}")
+        current_app.logger.error(f"Error loading timetable: {e}")
         timetable_data = {}
         
     return render_template('timetable.html', timetable_data=timetable_data)
@@ -85,7 +84,7 @@ def api_timetable_data():
             timetable_data = json.load(f)
         return jsonify(timetable_data)
     except Exception as e:
-        print(f"Error serving timetable json: {e}")
+        current_app.logger.error(f"Error serving timetable json: {e}")
         return jsonify({}), 500
 
 @current_app.route('/api/network_test')

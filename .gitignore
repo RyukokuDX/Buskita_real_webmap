@@ -23,6 +23,9 @@ wheels/
 env/
 venv/
 
+# Log files
+*.log
+
 # Project specific ignores
 # Ignore JSON files in the root, but not the timetable
 *.json
