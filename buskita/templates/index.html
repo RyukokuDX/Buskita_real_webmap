@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        .legend { position: absolute; bottom: 20px; right: 20px; z-index: 1000; padding: 10px; background-color: rgba(255, 255, 255, 0.9); border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,0.4); width: 220px; }
-        .legend h4 { margin: 0 0 10px 0; cursor: pointer; font-size: 16px; text-align: center; }
-        .legend .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
-        .legend .color-box { width: 18px; height: 18px; margin-right: 8px; border: 1px solid #777; }
+        .legend { position: absolute; bottom: 20px; right: 20px; z-index: 1000; padding: 8px; background-color: rgba(255, 255, 255, 0.9); border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.4); }
+        .legend h4 { margin: 0 0 8px 0; cursor: pointer; font-size: 13px; text-align: center; }
+        .legend .legend-item { display: flex; align-items: center; margin-bottom: 4px; font-size: 13px; }
+        .legend .color-box { width: 14px; height: 14px; margin-right: 6px; border: 1px solid #777; }
         .custom-div-icon i { -webkit-text-stroke: 1px white; }
     </style>
 </head>
@@ -25,12 +25,12 @@
         <div id="legend" class="legend">
             <h4 id="legend-title">凡例 <i class="fa-solid fa-caret-down"></i></h4>
             <div id="legend-details" style="display: none;">
-                <div class="legend-item"><div class="color-box" style="background-color: #007bff;"></div>ソロ席も余裕。快適すぎ</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #28a745;"></div>全然座れる。勝ち確</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #ffc107;"></div>ちょい混み。コミュ力試される</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #dc3545;"></div>満員。今日のバスはパーリナイ</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #000000;"></div>…見なかったことにしよ</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #6c757d;"></div>不明</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #007bff;"></div>空席多数</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #28a745;"></div>空席あり</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #ffc107;"></div>やや混雑</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #dc3545;"></div>満員</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #000000;"></div>超満員</div>
+                <div class="legend-item"><div class="color-box" style="background-color: #6c757d;"></div>情報なし</div>
             </div>
         </div>
     </div>
@@ -38,34 +38,55 @@
     <div id="dashboard">
         <header>
             <h1><i class="fa-solid fa-bus"></i> Ryukoku Bus Navi</h1>
+            <div class="dashboard-menu">
+                <a href="/timetable" class="menu-item">
+                    <i class="fa-solid fa-table-list"></i>
+                    <span>時刻表</span>
+                </a>
+            </div>
         </header>
-        <div class="dashboard-menu">
-            <a href="/timetable" class="menu-item">
-                <i class="fa-solid fa-table-list"></i>
-                <span>時刻表</span>
-            </a>
-        </div>
         <div class="content">
             <div id="dashboard-section-countdown" class="dashboard-section">
-                <div class="countdown-group">
-                    <h5 class="countdown-title">
-                        <i class="fa-solid fa-graduation-cap"></i> 龍谷大学行き
-                    </h5>
-                    <div id="countdown-seta_to_univ">
-                        <div class="no-bus-info">情報を取得中...</div>
+                <div id="countdown-slider-container">
+                    <div id="countdown-slider">
+                        <div class="countdown-group-wrapper" id="group-seta_to_univ">
+                            <h5 class="countdown-title">
+                                <i class="fa-solid fa-graduation-cap"></i> 龍谷大学行き
+                            </h5>
+                            <div id="countdown-seta_to_univ">
+                                <div class="no-bus-info">情報を取得中...</div>
+                            </div>
+                        </div>
+                        <div class="countdown-group-wrapper" id="group-univ_to_seta">
+                            <h5 class="countdown-title">
+                                <i class="fa-solid fa-train"></i> 瀬田駅行き
+                            </h5>
+                            <div id="countdown-univ_to_seta">
+                                <div class="no-bus-info">情報を取得中...</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="countdown-group">
-                    <h5 class="countdown-title">
-                        <i class="fa-solid fa-train"></i> 瀬田駅行き
-                    </h5>
-                    <div id="countdown-univ_to_seta">
-                        <div class="no-bus-info">情報を取得中...</div>
-                    </div>
+                <div id="countdown-dots">
+                    <span class="dot active" data-index="0"></span>
+                    <span class="dot" data-index="1"></span>
                 </div>
             </div>
             <div id="dashboard-section-summary" class="dashboard-section">
                 <h5><i class="fa-solid fa-bus-simple"></i> 最終バス</h5>
+                <div class="final-bus-grid">
+                    <span class="final-bus-label">大学行き:</span> <span id="final-bus-seta_to_univ-pc">--:--</span>
+                    <span class="final-bus-label">瀬田駅行き:</span> <span id="final-bus-univ_to_seta-pc">--:--</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="final-bus-panel">
+            <div id="final-bus-handle">
+                <i class="fa-solid fa-grip-lines"></i>
+                <span>最終バス</span>
+            </div>
+            <div id="final-bus-content">
                 <div class="final-bus-grid">
                     <span class="final-bus-label">大学行き:</span> <span id="final-bus-seta_to_univ">--:--</span>
                     <span class="final-bus-label">瀬田駅行き:</span> <span id="final-bus-univ_to_seta">--:--</span>
@@ -75,7 +96,7 @@
     </div>
 
     <script>
-        const map = L.map('map').setView([34.98, 135.95], 14);
+        const map = L.map('map').setView([34.977, 135.932], 14);
         // 複数の地図タイルサービスを試行
         const tileLayers = [
             {
@@ -229,13 +250,14 @@
                             loadingOverlay.style.display = 'none';
                         }, 500); // transitionの時間と合わせる
                         isFirstLoad = false;
+                        // 初回ロード完了後にランドマークを読み込む
+                        loadLandmarks(); 
                     }
                 }); 
         }
 
         setInterval(updateBusLocations, 3000);
         updateBusLocations();
-        loadLandmarks();
         
         // --- Dashboard Logic ---
         let timetableData = {};
@@ -341,11 +363,16 @@
                 countdownContainer.innerHTML = `<div class="no-bus-info">本日の運行は終了しました</div>`;
             }
             
+            // PC用とスマホ用の両方の最終バス表示を更新する
             const finalBusElement = document.getElementById(`final-bus-${direction}`);
+            const finalBusElementPc = document.getElementById(`final-bus-${direction}-pc`);
+
             if (busInfo.final) {
-                finalBusElement.textContent = busInfo.final;
+                if (finalBusElement) finalBusElement.textContent = busInfo.final;
+                if (finalBusElementPc) finalBusElementPc.textContent = busInfo.final;
             } else {
-                finalBusElement.textContent = "---";
+                if (finalBusElement) finalBusElement.textContent = "---";
+                if (finalBusElementPc) finalBusElementPc.textContent = "---";
             }
         }
 
@@ -365,6 +392,85 @@
             legendDetails.style.display = isHidden ? 'block' : 'none';
             legendTitle.querySelector('i').className = isHidden ? 'fa-solid fa-caret-up' : 'fa-solid fa-caret-down';
         });
+
+        // --- スワイプ機能のロジック ---
+        function setupSwipe() {
+            // スマホ縦向きでない場合は処理を中断
+            if (window.innerWidth > 768 || window.matchMedia("(orientation: landscape)").matches) {
+                return;
+            }
+
+            const slider = document.getElementById('countdown-slider');
+            const dots = document.querySelectorAll('.dot');
+            let currentIndex = 0;
+            let startX = 0;
+            let diffX = 0;
+
+            function updateSlider() {
+                slider.style.transform = `translateX(-${currentIndex * 50}%)`;
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+
+            slider.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            });
+
+            slider.addEventListener('touchmove', (e) => {
+                if (!startX) return;
+                diffX = e.touches[0].clientX - startX;
+            });
+
+            slider.addEventListener('touchend', () => {
+                const threshold = 50; // 50px以上スワイプしたら切り替え
+                if (diffX < -threshold) { // 左スワイプ
+                    currentIndex = 1;
+                } else if (diffX > threshold) { // 右スワイプ
+                    currentIndex = 0;
+                }
+                updateSlider();
+                startX = 0;
+                diffX = 0;
+            });
+        }
+        
+        // ページ読み込み時とウィンドウサイズ変更時にセットアップを実行
+        window.addEventListener('load', setupSwipe);
+        window.addEventListener('resize', setupSwipe);
+
+        // --- 最終バスパネルのロジック ---
+        function setupFinalBusPanel() {
+            const panel = document.getElementById('final-bus-panel');
+            const handle = document.getElementById('final-bus-handle');
+            const summarySection = document.getElementById('dashboard-section-summary');
+
+            if (!panel || !handle || !summarySection) return;
+
+            const isMobilePortrait = window.innerWidth <= 768 && window.matchMedia("(orientation: portrait)").matches;
+
+            if (isMobilePortrait) {
+                // --- スマートフォン（縦向き）の場合 ---
+                panel.style.display = 'block';
+                summarySection.style.display = 'none';
+                
+                // イベントリスナーが重複しないようにフラグで管理
+                if (!handle.dataset.listenerAttached) {
+                    handle.addEventListener('click', () => {
+                        panel.classList.toggle('is-open');
+                    });
+                    handle.dataset.listenerAttached = 'true';
+                }
+            } else {
+                // --- PCや横向きの場合 ---
+                panel.style.display = 'none';
+                summarySection.style.display = 'block';
+            }
+        }
+
+        // ページ読み込み時とウィンドウサイズ変更時にパネルをセットアップ
+        window.addEventListener('load', setupFinalBusPanel);
+        window.addEventListener('resize', setupFinalBusPanel);
     </script>
 </body>
 </html> 
