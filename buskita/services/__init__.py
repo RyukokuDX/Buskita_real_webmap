@@ -14,8 +14,25 @@ def group_schedules_by_hour(schedules):
     時刻オブジェクトのリストを時間ごとにグループ化するヘルパー関数。
     例: [{'time': '07:30', 'is_direct': True}] -> [('7', ['30(直)'])]
     """
-    # ... (関数の実装は省略)
-    # ...
+    grouped = {}
+    if not schedules:
+        return []
+    for schedule_item in schedules:
+        try:
+            time_str = schedule_item['time']
+            is_direct = schedule_item['is_direct']
+            hour, minute = time_str.split(':')
+            hour_key = str(int(hour))
+
+            if hour_key not in grouped:
+                grouped[hour_key] = []
+            
+            display_minute = f"{minute}(直)" if is_direct else minute
+            grouped[hour_key].append(display_minute)
+
+        except (ValueError, KeyError):
+            continue
+    
     return sorted(grouped.items(), key=lambda item: int(item[0]))
 
 def filter_and_format_buses(bus_list):
@@ -23,8 +40,25 @@ def filter_and_format_buses(bus_list):
     APIから取得したバスのリストから、必要な情報（緯度経度、行き先など）だけを抽出し、
     フロントエンドで使いやすい形式に整形する関数。
     """
-    # ... (関数の実装は省略)
-    # ...
+    locations = []
+    if not bus_list:
+        return locations
+    for bus in bus_list:
+        if bus and 'position' in bus and 'latitude' in bus['position'] and 'longitude' in bus['position']:
+            try:
+                # 行き先情報は routeNames の '1' から取得する
+                dest_name = bus.get('routeNames', {}).get('1', '情報なし')
+                
+                locations.append({
+                    'id': bus.get('workNo'),
+                    'lat': float(bus['position']['latitude']),
+                    'lng': float(bus['position']['longitude']),
+                    'dest': dest_name,
+                    'delayMinutes': bus.get('delayMinutes', 0),
+                    'passenger': bus.get('passengerCount', 0) # ★★★ キー名を 'passenger' から 'passengerCount' に修正
+                })
+            except (ValueError, TypeError):
+                continue
     return locations
 
 # --- 外部API連携関数 ---
