@@ -11,20 +11,22 @@ graph TD
         B["帝産バスAPI<br/>(リアルタイムバス位置)"]
     end
 
-    subgraph "サーバー処理 (web_map_app.py)"
-        C["/api/timetable_data<br/>(時刻表JSONを返す)"]
-        D["/api/bus_locations<br/>(バス位置情報を返す)"]
+    subgraph "サーバー処理 (buskita/)"
+        C["routes.py<br/>(URLルーティング)"]
+        D["services/__init__.py<br/>(ビジネスロジック)"]
     end
     
-    subgraph "ブラウザ表示 (index.html)"
+    subgraph "ブラウザ表示 (templates/)"
         E["Dashboard<br/>(次のバスまでのカウントダウン)"]
         F["Leaflet Map<br/>(バスアイコンのリアルタイム表示)"]
     end
 
     A --> C
     B --> D
-    
+    D --> C
+
     C --> E
+    C --> F
     D --> E
     D --> F
 
