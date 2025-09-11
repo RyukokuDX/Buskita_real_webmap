@@ -24,9 +24,6 @@ env/
 venv/
 
 # Project specific ignores
-project_backups/
-archive/
-
 # Ignore JSON files in the root, but not the timetable
 *.json
 !buskita/static/timetable.json
