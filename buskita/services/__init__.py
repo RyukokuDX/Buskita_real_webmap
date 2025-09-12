@@ -65,9 +65,7 @@ def filter_and_format_buses(bus_list):
                         "lng": float(bus["position"]["longitude"]),
                         "dest": dest_name,
                         "delayMinutes": bus.get("delayMinutes", 0),
-                        "passenger": bus.get(
-                            "passengerCount", 0
-                        ),  # ★★★ キー名を 'passenger' から 'passengerCount' に修正
+                        "passenger": bus.get("passenger"),
                     }
                 )
             except (ValueError, TypeError):
