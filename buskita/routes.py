@@ -25,16 +25,22 @@ def api_bus_locations():
     """
     バスの位置情報をJSON形式で返すAPIエンドポイント。
     フロントエンドのJavaScriptから定期的に呼び出されます。
+    ★★★ 新しい設計では、この関数はキャッシュからデータを読み出すだけです ★★★
     """
     # 実際のデータ取得処理は services モジュールに任せます。
-    locations_raw = services.get_live_bus_data()
-    is_stale = False  # データがバックアップから来たものかを示すフラグ
+    # この関数はキャッシュからデータを高速に読み出すだけです。
+    locations_raw = services.get_buses_from_cache()
+
+    # is_stale フラグは、リアルタイム性を重視する今回の設計では不要になる可能性がありますが、
+    # バックアップ機能との兼ね合いを考え、一旦ロジックは残します。
+    # ただし、バックエンドでキャッシュが更新され続けるため、常に is_stale=False となります。
+    is_stale = False
 
     # APIからデータが取得できなかった場合、バックアップファイルの使用を試みます。
     if not locations_raw:
-        current_app.logger.warning(
-            "APIから有効なデータが取得できませんでした。バックアップを試みます。"
-        )
+        # このブロックは、バックグラウンドスレッドがまだ一度もキャッシュを書き込んでいない
+        # アプリケーション起動直後などに実行される可能性があります。
+        current_app.logger.warning("キャッシュに有効なデータがありませんでした。バックアップを試みます。")
         backup_file = current_app.config["BACKUP_FILE"]
         if os.path.exists(backup_file):
             try:
