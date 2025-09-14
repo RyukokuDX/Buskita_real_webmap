@@ -47,6 +47,7 @@ basukita-project/
 ### 5.1. ローカル環境での実行
 
 1.  **依存ライブラリのインストール:**
+
     ```bash
     # 本番環境向け
     pip install -r requirements.txt
@@ -54,6 +55,7 @@ basukita-project/
     # テストなど開発に必要なライブラリを含む場合
     pip install -r requirements-dev.txt
     ```
+
 2.  **アプリケーションの実行:**
     ```bash
     python3 run.py
