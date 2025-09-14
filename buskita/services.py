@@ -6,6 +6,8 @@ import json
 import os
 from concurrent.futures import ThreadPoolExecutor
 from flask import current_app
+# __init__.py で作成したグローバルなキャッシュインスタンスをインポート
+from buskita import cache
 
 # --- データ整形・補助関数 ---
 
@@ -63,9 +65,7 @@ def filter_and_format_buses(bus_list):
                         "lng": float(bus["position"]["longitude"]),
                         "dest": dest_name,
                         "delayMinutes": bus.get("delayMinutes", 0),
-                        "passenger": bus.get(
-                            "passengerCount", 0
-                        ),  # ★★★ キー名を 'passenger' から 'passengerCount' に修正
+                        "passenger": bus.get("passenger"),
                     }
                 )
             except (ValueError, TypeError):
@@ -76,35 +76,41 @@ def filter_and_format_buses(bus_list):
 # --- 外部API連携関数 ---
 
 
-def get_bus_details(work_no, api_base_url, site_id, headers):
+def get_buses_from_cache():
     """
-    個別のバスの詳細情報をAPIから取得します。
-    get_live_bus_data内で、並列処理される個々のタスクです。
+    キャッシュからバスの生データを取得する。
+    API通信は行わない。
     """
-    try:
-        endpoint = f"{api_base_url}/get-bus"
-        payload = {"language": 1, "workNo": str(work_no), "siteId": site_id}
-        response = requests.post(
-            endpoint, json=payload, headers=headers, timeout=3)
-        if response.status_code == 200:
-            buses = response.json().get("bus", [])
-            if buses:
-                return buses[0]
-        # エラーが発生した場合はNoneを返すのみとし、ログ出力は呼び出し元で行う
-    except requests.exceptions.RequestException:
-        # APIリクエストでエラーが発生した場合でも、ここではログを出力せず、
-        # 呼び出し元でエラーを集約して処理します。
-        pass
-    return None
+    return cache.get('live_bus_data') or []
 
 
-def get_live_bus_data():
+def fetch_and_cache_bus_data():
     """
-    運行中の全バスの位置情報と詳細情報を取得する、このアプリケーションのコア機能。
+    運行中の全バスの位置情報と詳細情報を取得し、結果をキャッシュに保存する。
+    この関数はバックグラウンドスレッドから定期的に呼び出される。
     """
+
+    def get_bus_details(work_no, api_base_url, site_id, headers):
+        """
+        個別のバスの詳細情報をAPIから取得する内部関数。
+        ThreadPoolExecutor内で並列処理される。
+        """
+        try:
+            endpoint = f"{api_base_url}/get-bus"
+            payload = {"language": 1, "workNo": str(work_no), "siteId": site_id}
+            response = requests.post(
+                endpoint, json=payload, headers=headers, timeout=3)
+            if response.status_code == 200:
+                buses = response.json().get("bus", [])
+                if buses:
+                    return buses[0]
+        except requests.exceptions.RequestException:
+            # エラー時はNoneを返し、呼び出し元でログを記録する
+            pass
+        return None
+
     try:
         # 0. アプリケーションコンテキストから設定値を変数に読み込みます。
-        #    (スレッドに渡すために必要)
         api_base_url = current_app.config["API_BASE_URL"]
         site_id = current_app.config["SITE_ID"]
         headers = current_app.config["HEADERS"]
@@ -115,7 +121,7 @@ def get_live_bus_data():
         payload = {"language": 1, "siteId": site_id}
         response = requests.post(
             endpoint, json=payload, headers=headers, timeout=5)
-        response.raise_for_status()  # HTTPエラーがあれば例外を発生させます。
+        response.raise_for_status()
 
         buses_with_location = response.json().get("buses", [])
 
@@ -141,7 +147,7 @@ def get_live_bus_data():
                     detailed_buses[work_no] = detail
                 else:
                     # 詳細情報の取得に失敗したバスをログに記録
-                    current_app.logger.warning(
+                    current_app.logger.info(
                         f"バス詳細情報の取得に失敗しました (workNo: {work_no})"
                     )
 
@@ -159,15 +165,16 @@ def get_live_bus_data():
             with open(backup_file, "w", encoding="utf-8") as f:
                 json.dump(merged_buses, f, ensure_ascii=False, indent=2)
 
+        # ★★★ 新しい設計の核心 ★★★
+        # APIから取得・整形した最終的なバスの生データをキャッシュに保存する
+        cache.set('live_bus_data', merged_buses)
+        
         return merged_buses
 
     except requests.exceptions.RequestException as e:
-        # メインのAPIリクエストが失敗した場合のフォールバック処理。
-        current_app.logger.error(f"APIリクエストエラー (get-buses): {e}")
-        backup_file = current_app.config["BACKUP_FILE"]
-        if os.path.exists(backup_file):
-            # バックアップファイルが存在すれば、そこからデータを読み込みます。
-            current_app.logger.info("バックアップからデータを読み込みます。")
-            with open(backup_file, "r", encoding="utf-8") as f:
-                return json.load(f)
-        return []
+        endpoint = f"{current_app.config['API_BASE_URL']}/get-buses"
+        current_app.logger.error(f"APIリクエストエラー (endpoint: {endpoint}): {e}")
+        # APIリクエストが失敗した場合は、キャッシュを更新せずに処理を終了します。
+        # これにより、一時的なネットワークエラーなどが発生した場合でも、
+        # 古いキャッシュデータを表示し続けることで、サービスの完全な停止を防ぎます。
+        return
