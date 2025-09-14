@@ -147,7 +147,7 @@ def fetch_and_cache_bus_data():
                     detailed_buses[work_no] = detail
                 else:
                     # 詳細情報の取得に失敗したバスをログに記録
-                    current_app.logger.warning(
+                    current_app.logger.info(
                         f"バス詳細情報の取得に失敗しました (workNo: {work_no})"
                     )
 
@@ -172,13 +172,9 @@ def fetch_and_cache_bus_data():
         return merged_buses
 
     except requests.exceptions.RequestException as e:
-        current_app.logger.error(f"APIリクエストエラー (get-buses): {e}")
-        # APIリクエストが失敗した場合は、バックアップファイルからデータを読み込み、
-        # そのデータをキャッシュに設定するフォールバック処理を行う
-        backup_file = current_app.config["BACKUP_FILE"]
-        if os.path.exists(backup_file):
-            current_app.logger.info("バックアップからデータを読み込み、キャッシュを更新します。")
-            with open(backup_file, "r", encoding="utf-8") as f:
-                backup_data = json.load(f)
-                cache.set('live_bus_data', backup_data)
-        return []
+        endpoint = f"{current_app.config['API_BASE_URL']}/get-buses"
+        current_app.logger.error(f"APIリクエストエラー (endpoint: {endpoint}): {e}")
+        # APIリクエストが失敗した場合は、キャッシュを更新せずに処理を終了します。
+        # これにより、一時的なネットワークエラーなどが発生した場合でも、
+        # 古いキャッシュデータを表示し続けることで、サービスの完全な停止を防ぎます。
+        return

@@ -27,11 +27,13 @@ venv/
 *.log
 
 # Project specific ignores
-# Ignore JSON files in the root, but not the timetable
+# Ignore JSON files in the root, but not the timetable or data files
 *.json
 !buskita/static/timetable.json
+!buskita/data/*.json
+!buskita/data/*.json
 
 # OS / Editor specific
 .DS_Store
 .vscode/
-.idea/ 
+.idea/

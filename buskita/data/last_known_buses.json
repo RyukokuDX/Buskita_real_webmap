@@ -1,0 +1,13 @@
+[
+  {
+    "workNo": "1",
+    "position": {
+      "latitude": 34.0,
+      "longitude": 135.0
+    },
+    "routeNames": {
+      "1": "瀬田"
+    },
+    "delayMinutes": 5
+  }
+]
