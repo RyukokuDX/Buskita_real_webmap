@@ -4,23 +4,17 @@ from flask import Flask
 import logging
 from logging.handlers import RotatingFileHandler
 import os
-from flask_caching import Cache
 from threading import Thread
 import time
 
-# アプリケーションのグローバルなキャッシュインスタンスを作成
-cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
+from buskita.extensions import cache
 
-def update_bus_data_periodically():
+
+def update_bus_data_periodically(app):
     """
     5秒ごとにバスデータを取得し、キャッシュを更新するバックグラウンドタスク。
     """
     from buskita.services import fetch_and_cache_bus_data
-    
-    # create_app()からアプリケーションコンテキストを取得しないと動作しないため、
-    # この関数内で create_app を呼び出してコンテキストを作成します。
-    # これは少し変則的ですが、バックグラウンドスレッドでFlaskの機能を利用するための一般的な手法です。
-    app = create_app(init_background_thread=False)
 
     with app.app_context():
         while True:
@@ -31,7 +25,27 @@ def update_bus_data_periodically():
             except Exception as e:
                 # バックグラウンドタスクでのエラーはコンソールに出力
                 print(f"【Background Thread】エラーが発生しました: {e}")
-            time.sleep(10) # 10秒待機
+            time.sleep(10)  # 10秒待機
+
+
+def register_logging(app):
+    """ロギングを設定する"""
+    if not app.debug and not app.testing:
+        if not os.path.exists('logs'):
+            os.mkdir('logs')
+        file_handler = RotatingFileHandler('logs/buskita.log', maxBytes=10240, backupCount=10)
+        file_handler.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+        app.logger.setLevel(logging.INFO)
+        app.logger.info('Buskita startup')
+
+
+def start_background_tasks(app):
+    """バックグラウンドタスクを開始する"""
+    thread = Thread(target=update_bus_data_periodically, args=(app,), daemon=True)
+    thread.start()
 
 
 def create_app(init_background_thread=True):
@@ -48,46 +62,15 @@ def create_app(init_background_thread=True):
     # キャッシュをアプリケーションに初期化・登録
     cache.init_app(app)
 
-    # --- ここからロギング設定を追加 ---
-    # `debug=False`（本番モード）の場合にのみ、ファイルへのログ出力を有効にします。
-    # 開発中はコンソール出力のみとなり、ログファイルは作成されません。
-    if not app.debug:
-        # ログファイルを保存する 'logs' ディレクトリを作成します。
-        log_dir = os.path.join(app.root_path, "..", "logs")
-        if not os.path.exists(log_dir):
-            os.mkdir(log_dir)
+    # ロギング設定
+    register_logging(app)
 
-        # RotatingFileHandler: ログファイルが肥大化しすぎないように、
-        # サイズが1MBを超えたら自動で新しいファイルに切り替えます。(バックアップは3つまで)
-        file_handler = RotatingFileHandler(
-            os.path.join(log_dir, "app.log"), maxBytes=1024 * 1024, backupCount=3
-        )
-
-        # ログのフォーマットを定義します。
-        # (日時) (レベル): (メッセージ) [ファイルパス:行番号]
-        formatter = logging.Formatter(
-            "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
-        )
-        file_handler.setFormatter(formatter)
-
-        # ログファイルには、WARNINGレベル以上の重要なログのみを記録します。
-        file_handler.setLevel(logging.WARNING)
-
-        # 設定したファイルハンドラを、Flaskアプリケーションのロガーに追加します。
-        app.logger.addHandler(file_handler)
-        # アプリケーション全体のログレベルはINFOに設定し、コンソールにはINFOレベル以上が表示されるようにします。
-        app.logger.setLevel(logging.INFO)
-        app.logger.info("Buskita application startup")
-    # --- ロギング設定ここまで ---
-
-    # routes.py に定義されたURLルーティングをアプリケーションに登録します。
-    with app.app_context():
-        from . import routes  # noqa: F401
+    # Blueprint を登録します。
+    from buskita.main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
 
     # アプリケーションの初回起動時にのみバックグラウンドスレッドを開始
     if init_background_thread:
-        # daemon=True にすることで、メインスレッドが終了すると共にバックグラウンドスレッドも終了する
-        thread = Thread(target=update_bus_data_periodically, daemon=True)
-        thread.start()
+        start_background_tasks(app)
 
     return app

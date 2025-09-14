@@ -3,16 +3,17 @@
 # Flaskの `current_app` を介して、アプリケーションのルーティングを定義します。
 
 from flask import current_app, jsonify, render_template
+from . import main  # Blueprintインスタンスをインポート
 import json
 import os
 import requests
 from datetime import datetime
 
 # services パッケージからビジネスロジックをインポートします。
-from . import services
+from buskita import services
 
 
-@current_app.route("/")
+@main.route("/")
 def index():
     """
     メインのマップページ (`index.html`) を表示します。
@@ -20,7 +21,7 @@ def index():
     return render_template("index.html")
 
 
-@current_app.route("/api/bus_locations")
+@main.route("/api/bus_locations")
 def api_bus_locations():
     """
     バスの位置情報をJSON形式で返すAPIエンドポイント。
@@ -40,7 +41,7 @@ def api_bus_locations():
     if not locations_raw:
         # このブロックは、バックグラウンドスレッドがまだ一度もキャッシュを書き込んでいない
         # アプリケーション起動直後などに実行される可能性があります。
-        current_app.logger.warning("キャッシュに有効なデータがありませんでした。バックアップを試みます。")
+        current_app.logger.info("初回アクセス時にキャッシュがまだ生成されていなかったため、バックアップを試みます。")
         backup_file = current_app.config["BACKUP_FILE"]
         if os.path.exists(backup_file):
             try:
@@ -68,7 +69,7 @@ def api_bus_locations():
     return jsonify({"buses": locations, "is_stale": is_stale})
 
 
-@current_app.route("/timetable")
+@main.route("/timetable")
 def timetable_page():
     """
     時刻表ページ (`timetable.html`) を表示します。
@@ -102,7 +103,7 @@ def timetable_page():
     return render_template("timetable.html", timetable_data=timetable_data)
 
 
-@current_app.route("/api/landmarks")
+@main.route("/api/landmarks")
 def api_landmarks():
     """
     地図上に表示する固定のランドマーク（大学、駅）の情報を返すAPI。
@@ -119,7 +120,7 @@ def api_landmarks():
     return jsonify(landmarks)
 
 
-@current_app.route("/api/timetable_data")
+@main.route("/api/timetable_data")
 def api_timetable_data():
     """
     静的な時刻表JSON (`timetable.json`) をそのままの形で返すAPI。
@@ -138,7 +139,7 @@ def api_timetable_data():
         return jsonify({}), 500
 
 
-@current_app.route("/api/network_test")
+@main.route("/api/network_test")
 def api_network_test():
     """
     クライアント（ブラウザ）が外部の地図タイルサーバーにアクセスできるかを
