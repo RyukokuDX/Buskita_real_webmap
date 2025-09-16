@@ -4,8 +4,10 @@
 import requests
 import json
 import os
+from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from flask import current_app
+
 # __init__.py で作成したグローバルなキャッシュインスタンスをインポート
 from buskita import cache
 
@@ -81,7 +83,7 @@ def get_buses_from_cache():
     キャッシュからバスの生データを取得する。
     API通信は行わない。
     """
-    return cache.get('live_bus_data') or []
+    return cache.get("live_bus_data") or []
 
 
 def fetch_and_cache_bus_data():
@@ -98,8 +100,7 @@ def fetch_and_cache_bus_data():
         try:
             endpoint = f"{api_base_url}/get-bus"
             payload = {"language": 1, "workNo": str(work_no), "siteId": site_id}
-            response = requests.post(
-                endpoint, json=payload, headers=headers, timeout=3)
+            response = requests.post(endpoint, json=payload, headers=headers, timeout=3)
             if response.status_code == 200:
                 buses = response.json().get("bus", [])
                 if buses:
@@ -119,8 +120,7 @@ def fetch_and_cache_bus_data():
         # 1. まず、全バスの基本情報（位置情報など）を取得します。
         endpoint = f"{api_base_url}/get-buses"
         payload = {"language": 1, "siteId": site_id}
-        response = requests.post(
-            endpoint, json=payload, headers=headers, timeout=5)
+        response = requests.post(endpoint, json=payload, headers=headers, timeout=5)
         response.raise_for_status()
 
         buses_with_location = response.json().get("buses", [])
@@ -134,8 +134,7 @@ def fetch_and_cache_bus_data():
             # get_bus_details関数に、必要な設定値を引数として渡します。
             future_to_work_no = {
                 executor.submit(
-                    get_bus_details, bus.get(
-                        "workNo"), api_base_url, site_id, headers
+                    get_bus_details, bus.get("workNo"), api_base_url, site_id, headers
                 ): bus.get("workNo")
                 for bus in buses_with_location
             }
@@ -167,8 +166,10 @@ def fetch_and_cache_bus_data():
 
         # ★★★ 新しい設計の核心 ★★★
         # APIから取得・整形した最終的なバスの生データをキャッシュに保存する
-        cache.set('live_bus_data', merged_buses)
-        
+        cache.set("live_bus_data", merged_buses)
+        # 最終更新時刻をキャッシュに保存する
+        cache.set("last_updated", datetime.utcnow())
+
         return merged_buses
 
     except requests.exceptions.RequestException as e:

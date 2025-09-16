@@ -8,9 +8,20 @@ import json
 import os
 import requests
 from datetime import datetime
+import jpholiday
 
 # services パッケージからビジネスロジックをインポートします。
 from buskita import services
+from buskita import cache
+
+
+@main.app_errorhandler(500)
+def internal_server_error(e):
+    """
+    サーバー内部でエラーが発生した場合に、カスタムエラーページを返すハンドラ。
+    """
+    current_app.logger.error(f"Internal Server Error: {e}")
+    return render_template("500.html"), 500
 
 
 @main.route("/")
@@ -41,7 +52,9 @@ def api_bus_locations():
     if not locations_raw:
         # このブロックは、バックグラウンドスレッドがまだ一度もキャッシュを書き込んでいない
         # アプリケーション起動直後などに実行される可能性があります。
-        current_app.logger.info("初回アクセス時にキャッシュがまだ生成されていなかったため、バックアップを試みます。")
+        current_app.logger.info(
+            "初回アクセス時にキャッシュがまだ生成されていなかったため、バックアップを試みます。"
+        )
         backup_file = current_app.config["BACKUP_FILE"]
         if os.path.exists(backup_file):
             try:
@@ -69,6 +82,36 @@ def api_bus_locations():
     return jsonify({"buses": locations, "is_stale": is_stale})
 
 
+@main.route("/api/day_type")
+def api_day_type():
+    """
+    今日の曜日タイプ（平日/土曜/休日）を返すAPI。祝日を考慮します。
+    """
+    today = datetime.now().date()
+    day_type = "weekdays"  # デフォルトは平日
+    if jpholiday.is_holiday(today) or today.weekday() == 6:
+        day_type = "holidays"
+    elif today.weekday() == 5:
+        day_type = "saturdays"
+
+    return jsonify({"day_type": day_type})
+
+
+@main.route("/api/last_updated")
+def api_last_updated():
+    """
+    キャッシュの最終更新時刻を返すAPIエンドポイント。
+    """
+    last_updated = cache.get("last_updated")
+    if last_updated:
+        # datetimeオブジェクトをISO 8601形式の文字列に変換
+        # ZはUTCを示すために手動で追加
+        last_updated_iso = last_updated.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
+        return jsonify({"last_updated": last_updated_iso})
+    else:
+        return jsonify({"last_updated": None})
+
+
 @main.route("/timetable")
 def timetable_page():
     """
@@ -88,8 +131,7 @@ def timetable_page():
         for route_id, data in raw_timetable_data.items():
             processed_schedules = {}
             for day, times in data.get("schedules", {}).items():
-                processed_schedules[day] = services.group_schedules_by_hour(
-                    times)
+                processed_schedules[day] = services.group_schedules_by_hour(times)
 
             timetable_data[route_id] = {
                 "routeName": data["routeName"],
@@ -160,8 +202,7 @@ def api_network_test():
                 "accessible": response.status_code == 200,
             }
         except Exception as e:
-            results[url] = {"status": "error",
-                            "accessible": False, "error": str(e)}
+            results[url] = {"status": "error", "accessible": False, "error": str(e)}
 
     return jsonify(
         {

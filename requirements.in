@@ -1,0 +1,8 @@
+requests
+beautifulsoup4
+json5
+flask
+gunicorn
+googlemaps
+Flask-Caching
+jpholiday

@@ -1,174 +1,251 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ryukoku Bus Navi</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        .legend { position: absolute; bottom: 20px; right: 20px; z-index: 1000; padding: 8px; background-color: rgba(255, 255, 255, 0.9); border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.4); }
-        .legend h4 { margin: 0 0 8px 0; cursor: pointer; font-size: 13px; text-align: center; }
-        .legend .legend-item { display: flex; align-items: center; margin-bottom: 4px; font-size: 13px; }
-        .legend .color-box { width: 14px; height: 14px; margin-right: 6px; border: 1px solid #777; }
-        .custom-div-icon i { -webkit-text-stroke: 1px white; }
+      .legend {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        padding: 8px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 6px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+      }
+      .legend h4 {
+        margin: 0 0 8px 0;
+        cursor: pointer;
+        font-size: 13px;
+        text-align: center;
+      }
+      .legend .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+      .legend .color-box {
+        width: 14px;
+        height: 14px;
+        margin-right: 6px;
+        border: 1px solid #777;
+      }
+      .custom-div-icon i {
+        -webkit-text-stroke: 1px white;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="map-container">
-        <div id="loading-overlay">
-            <div class="spinner"></div>
+      <div id="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+      <div id="map"></div>
+      <div
+        id="update-timestamp"
+        style="
+          position: absolute;
+          bottom: 10px;
+          right: 20px;
+          z-index: 1000;
+          background: rgba(255, 255, 255, 0.8);
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-size: 12px;
+          color: #333;
+        "
+      ></div>
+      <div id="legend" class="legend">
+        <h4 id="legend-title">凡例 <i class="fa-solid fa-caret-down"></i></h4>
+        <div id="legend-details" style="display: none">
+          <div class="legend-item">
+            <div class="color-box" style="background-color: #007bff"></div>
+            空席多数
+          </div>
+          <div class="legend-item">
+            <div class="color-box" style="background-color: #28a745"></div>
+            空席あり
+          </div>
+          <div class="legend-item">
+            <div class="color-box" style="background-color: #ffc107"></div>
+            やや混雑
+          </div>
+          <div class="legend-item">
+            <div class="color-box" style="background-color: #dc3545"></div>
+            満員
+          </div>
+          <div class="legend-item">
+            <div class="color-box" style="background-color: #000000"></div>
+            超満員
+          </div>
+          <div class="legend-item">
+            <div class="color-box" style="background-color: #6c757d"></div>
+            情報なし
+          </div>
         </div>
-        <div id="map"></div>
-        <div id="legend" class="legend">
-            <h4 id="legend-title">凡例 <i class="fa-solid fa-caret-down"></i></h4>
-            <div id="legend-details" style="display: none;">
-                <div class="legend-item"><div class="color-box" style="background-color: #007bff;"></div>空席多数</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #28a745;"></div>空席あり</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #ffc107;"></div>やや混雑</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #dc3545;"></div>満員</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #000000;"></div>超満員</div>
-                <div class="legend-item"><div class="color-box" style="background-color: #6c757d;"></div>情報なし</div>
-            </div>
-        </div>
+      </div>
     </div>
 
     <div id="dashboard">
-        <header>
-            <h1><i class="fa-solid fa-bus"></i> Ryukoku Bus Navi</h1>
-            <div class="dashboard-menu">
-                <a href="/timetable" class="menu-item">
-                    <i class="fa-solid fa-table-list"></i>
-                    <span>時刻表</span>
-                </a>
-            </div>
-        </header>
-        <div class="content">
-            <div id="dashboard-section-countdown" class="dashboard-section">
-                <div id="countdown-slider-container">
-                    <div id="countdown-slider">
-                        <div class="countdown-group-wrapper" id="group-seta_to_univ">
-                            <h5 class="countdown-title">
-                                <i class="fa-solid fa-graduation-cap"></i> 龍谷大学行き
-                            </h5>
-                            <div id="countdown-seta_to_univ">
-                                <div class="no-bus-info">情報を取得中...</div>
-                            </div>
-                        </div>
-                        <div class="countdown-group-wrapper" id="group-univ_to_seta">
-                            <h5 class="countdown-title">
-                                <i class="fa-solid fa-train"></i> 瀬田駅行き
-                            </h5>
-                            <div id="countdown-univ_to_seta">
-                                <div class="no-bus-info">情報を取得中...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="countdown-dots">
-                    <span class="dot active" data-index="0"></span>
-                    <span class="dot" data-index="1"></span>
-                </div>
-            </div>
-            <div id="dashboard-section-summary" class="dashboard-section">
-                <h5><i class="fa-solid fa-bus-simple"></i> 最終バス</h5>
-                <div class="final-bus-grid">
-                    <span class="final-bus-label">大学行き:</span> <span id="final-bus-seta_to_univ-pc">--:--</span>
-                    <span class="final-bus-label">瀬田駅行き:</span> <span id="final-bus-univ_to_seta-pc">--:--</span>
-                </div>
-            </div>
+      <header>
+        <h1><i class="fa-solid fa-bus"></i> Ryukoku Bus Navi</h1>
+        <div class="dashboard-menu">
+          <a href="/timetable" class="menu-item">
+            <i class="fa-solid fa-table-list"></i>
+            <span>時刻表</span>
+          </a>
         </div>
+      </header>
+      <div class="content">
+        <div id="dashboard-section-countdown" class="dashboard-section">
+          <div id="countdown-slider-container">
+            <div id="countdown-slider">
+              <div class="countdown-group-wrapper" id="group-seta_to_univ">
+                <h5 class="countdown-title">
+                  <i class="fa-solid fa-graduation-cap"></i> 龍谷大学行き
+                </h5>
+                <div id="countdown-seta_to_univ">
+                  <div class="no-bus-info">情報を取得中...</div>
+                </div>
+              </div>
+              <div class="countdown-group-wrapper" id="group-univ_to_seta">
+                <h5 class="countdown-title">
+                  <i class="fa-solid fa-train"></i> 瀬田駅行き
+                </h5>
+                <div id="countdown-univ_to_seta">
+                  <div class="no-bus-info">情報を取得中...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="countdown-dots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+          </div>
+        </div>
+        <div id="dashboard-section-summary" class="dashboard-section">
+          <h5><i class="fa-solid fa-bus-simple"></i> 最終バス</h5>
+          <div class="final-bus-grid">
+            <span class="final-bus-label">大学行き:</span>
+            <span id="final-bus-seta_to_univ-pc">--:--</span>
+            <span class="final-bus-label">瀬田駅行き:</span>
+            <span id="final-bus-univ_to_seta-pc">--:--</span>
+          </div>
+        </div>
+      </div>
 
-        <div id="final-bus-panel">
-            <div id="final-bus-handle">
-                <i class="fa-solid fa-grip-lines"></i>
-                <span>最終バス</span>
-            </div>
-            <div id="final-bus-content">
-                <div class="final-bus-grid">
-                    <span class="final-bus-label">大学行き:</span> <span id="final-bus-seta_to_univ">--:--</span>
-                    <span class="final-bus-label">瀬田駅行き:</span> <span id="final-bus-univ_to_seta">--:--</span>
-                </div>
-            </div>
+      <div id="final-bus-panel">
+        <div id="final-bus-handle">
+          <i class="fa-solid fa-grip-lines"></i>
+          <span>最終バス</span>
         </div>
+        <div id="final-bus-content">
+          <div class="final-bus-grid">
+            <span class="final-bus-label">大学行き:</span>
+            <span id="final-bus-seta_to_univ">--:--</span>
+            <span class="final-bus-label">瀬田駅行き:</span>
+            <span id="final-bus-univ_to_seta">--:--</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
-        const map = L.map('map').setView([34.977, 135.932], 14);
-        // 複数の地図タイルサービスを試行
-        const tileLayers = [
-            {
-                url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                options: { 
-                    maxZoom: 20, 
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    subdomains: 'abc'
-                }
-            },
-            {
-                url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                options: { 
-                    maxZoom: 20, 
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }
-            },
-            {
-                url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png',
-                options: { 
-                    maxZoom: 20, 
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }
-            },
-            {
-                url: 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
-                options: { 
-                    maxZoom: 20, 
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    subdomains: 'abcd'
-                }
-            },
-            {
-                url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-                options: { 
-                    maxZoom: 20, 
-                    attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
-                }
-            }
-        ];
+      const map = L.map("map").setView([34.977, 135.932], 14);
+      // 複数の地図タイルサービスを試行
+      const tileLayers = [
+        {
+          url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          options: {
+            maxZoom: 20,
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            subdomains: "abc",
+          },
+        },
+        {
+          url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          options: {
+            maxZoom: 20,
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          },
+        },
+        {
+          url: "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png",
+          options: {
+            maxZoom: 20,
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          },
+        },
+        {
+          url: "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+          options: {
+            maxZoom: 20,
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            subdomains: "abcd",
+          },
+        },
+        {
+          url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+          options: {
+            maxZoom: 20,
+            attribution: '&copy; <a href="https://www.esri.com/">Esri</a>',
+          },
+        },
+      ];
 
-        let currentTileLayer = null;
-        let tileLayerIndex = 0;
+      let currentTileLayer = null;
+      let tileLayerIndex = 0;
 
-        function addTileLayer() {
-            if (currentTileLayer) {
-                map.removeLayer(currentTileLayer);
-            }
-            
-            if (tileLayerIndex >= tileLayers.length) {
-                // すべての地図サービスが失敗した場合、エラーページを表示
-                console.warn('すべての地図サービスへのアクセスに失敗しました。VPN環境の可能性があります。');
-                showMapError();
-                return;
-            }
-
-            const tileConfig = tileLayers[tileLayerIndex];
-            currentTileLayer = L.tileLayer(tileConfig.url, tileConfig.options);
-            
-            currentTileLayer.on('tileerror', function() {
-                console.warn(`地図タイルの読み込みに失敗しました: ${tileConfig.url}`);
-                tileLayerIndex++;
-                setTimeout(addTileLayer, 1000);
-            });
-
-            currentTileLayer.addTo(map);
+      function addTileLayer() {
+        if (currentTileLayer) {
+          map.removeLayer(currentTileLayer);
         }
 
-        function showMapError() {
-            // 地図コンテナを非表示にして、エラーメッセージを表示
-            const mapContainer = document.getElementById('map-container');
-            mapContainer.innerHTML = `
+        if (tileLayerIndex >= tileLayers.length) {
+          // すべての地図サービスが失敗した場合、エラーページを表示
+          console.warn(
+            "すべての地図サービスへのアクセスに失敗しました。VPN環境の可能性があります。"
+          );
+          showMapError();
+          return;
+        }
+
+        const tileConfig = tileLayers[tileLayerIndex];
+        currentTileLayer = L.tileLayer(tileConfig.url, tileConfig.options);
+
+        currentTileLayer.on("tileerror", function () {
+          console.warn(`地図タイルの読み込みに失敗しました: ${tileConfig.url}`);
+          tileLayerIndex++;
+          setTimeout(addTileLayer, 1000);
+        });
+
+        currentTileLayer.addTo(map);
+      }
+
+      function showMapError() {
+        // 地図コンテナを非表示にして、エラーメッセージを表示
+        const mapContainer = document.getElementById("map-container");
+        mapContainer.innerHTML = `
                 <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background-color: #f8f9fa;">
                     <div style="text-align: center; padding: 40px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 600px;">
                         <div style="font-size: 48px; margin-bottom: 20px;">🗺️</div>
@@ -200,277 +277,409 @@
                     </div>
                 </div>
             `;
+      }
+
+      addTileLayer();
+      let busMarkers = {};
+      function getOccupancyStyle(p) {
+        if (p === null) return { color: "#6c757d" };
+        if (p <= 10) return { color: "#007bff" };
+        if (p <= 20) return { color: "#28a745" };
+        if (p <= 30) return { color: "#ffc107" };
+        if (p <= 39) return { color: "#dc3545" };
+        return { color: "#000000" };
+      }
+      function createBusIcon(p) {
+        const s = getOccupancyStyle(p);
+        return L.divIcon({
+          className: "custom-div-icon",
+          html: `<i class="fa-solid fa-bus fa-2x" style="color: ${s.color}; -webkit-text-stroke: 1px white;"></i>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+        });
+      }
+      function getLandmarkIcon(l) {
+        let i = "fa-solid fa-map-marker-alt",
+          c = "#333";
+        if (l.type === "university") {
+          i = "fa-solid fa-graduation-cap";
+          c = "#800000";
+        } else if (l.type === "station") {
+          i = "fa-solid fa-train";
+          c = "#008080";
         }
+        return L.divIcon({
+          className: "custom-div-icon",
+          html: `<i class="${i} fa-2x" style="color: ${c}; -webkit-text-stroke: 1px white;"></i>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32],
+        });
+      }
+      function loadLandmarks() {
+        fetch("/api/landmarks")
+          .then((r) => r.json())
+          .then((l) =>
+            l.forEach((d) =>
+              L.marker([d.lat, d.lng], { icon: getLandmarkIcon(d) })
+                .addTo(map)
+                .bindPopup(`<b>${d.name}</b>`)
+            )
+          );
+      }
 
-        addTileLayer();
-        let busMarkers = {};
-        function getOccupancyStyle(p) { if (p === null) return { color: '#6c757d' }; if (p <= 10) return { color: '#007bff' }; if (p <= 20) return { color: '#28a745' }; if (p <= 30) return { color: '#ffc107' }; if (p <= 39) return { color: '#dc3545' }; return { color: '#000000' }; }
-        function createBusIcon(p) { const s = getOccupancyStyle(p); return L.divIcon({ className: 'custom-div-icon', html: `<i class="fa-solid fa-bus fa-2x" style="color: ${s.color}; -webkit-text-stroke: 1px white;"></i>`, iconSize: [32, 32], iconAnchor: [16, 16] }); }
-        function getLandmarkIcon(l) { let i = 'fa-solid fa-map-marker-alt', c = '#333'; if (l.type === 'university') { i = 'fa-solid fa-graduation-cap'; c = '#800000'; } else if (l.type === 'station') { i = 'fa-solid fa-train'; c = '#008080'; } return L.divIcon({ className: 'custom-div-icon', html: `<i class="${i} fa-2x" style="color: ${c}; -webkit-text-stroke: 1px white;"></i>`, iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }); }
-        function loadLandmarks() { fetch('/api/landmarks').then(r => r.json()).then(l => l.forEach(d => L.marker([d.lat, d.lng], { icon: getLandmarkIcon(d) }).addTo(map).bindPopup(`<b>${d.name}</b>`))); }
-        
-        let isFirstLoad = true;
-        const loadingOverlay = document.getElementById('loading-overlay');
+      let isFirstLoad = true;
+      const loadingOverlay = document.getElementById("loading-overlay");
 
-        function updateBusLocations() { 
-            fetch('/api/bus_locations')
-                .then(r => r.json())
-                .then(d => { 
-                    const b = d.buses, u = new Set(); 
-                    if (!b) return; 
-                    b.forEach(i => { 
-                        if (typeof i.lat !== 'number' || typeof i.lng !== 'number') return; 
-                        const id = i.id; 
-                        u.add(id); 
-                        const ll = [i.lat, i.lng]; 
-                        let dt = '情報なし'; 
-                        if (i.delayMinutes !== null) dt = i.delayMinutes <= 0 ? 'ほぼ定刻' : `${i.delayMinutes}分遅れ`; 
-                        const dest = i.dest || '情報なし';
-                        const passengerCount = i.passenger;
-                        const pt = passengerCount !== null ? `${passengerCount}人` : '情報なし';
-                        const pc = `<div style="line-height: 1.8; font-size: 14px; min-width: 160px;"><div style="margin-bottom: 5px;"><strong>行き先:</strong> <span style="white-space: normal;">${dest}</span></div><hr style="margin: 8px 0; border: none; border-top: 1px solid #ddd;"><div style="margin-top: 8px;"><strong>遅延:</strong> ${dt}</div><div style="margin-top: 4px;"><strong>乗客数:</strong> ${pt}</div></div>`; 
-                        if (busMarkers[id]) {
-                            busMarkers[id].setLatLng(ll).setPopupContent(pc).setIcon(createBusIcon(passengerCount));
-                        } else {
-                            busMarkers[id] = L.marker(ll, { icon: createBusIcon(passengerCount) }).addTo(map).bindPopup(pc); 
-                        }
-                    }); 
-                    for (const id in busMarkers) {
-                        if (!u.has(parseInt(id, 10))) { 
-                            map.removeLayer(busMarkers[id]); 
-                            delete busMarkers[id]; 
-                        }
-                    }
+      function updateBusLocations() {
+        fetch("/api/bus_locations")
+          .then((r) => r.json())
+          .then((d) => {
+            const b = d.buses,
+              u = new Set();
+            if (!b) return;
+            b.forEach((i) => {
+              if (typeof i.lat !== "number" || typeof i.lng !== "number")
+                return;
+              const id = i.id;
+              u.add(id);
+              const ll = [i.lat, i.lng];
+              let dt = "情報なし";
+              if (i.delayMinutes !== null)
+                dt =
+                  i.delayMinutes <= 0 ? "ほぼ定刻" : `${i.delayMinutes}分遅れ`;
+              const dest = i.dest || "情報なし";
+              const passengerCount = i.passenger;
+              const pt =
+                passengerCount !== null ? `${passengerCount}人` : "情報なし";
+              const pc = `<div style="line-height: 1.8; font-size: 14px; min-width: 160px;"><div style="margin-bottom: 5px;"><strong>行き先:</strong> <span style="white-space: normal;">${dest}</span></div><hr style="margin: 8px 0; border: none; border-top: 1px solid #ddd;"><div style="margin-top: 8px;"><strong>遅延:</strong> ${dt}</div><div style="margin-top: 4px;"><strong>乗客数:</strong> ${pt}</div></div>`;
+              if (busMarkers[id]) {
+                busMarkers[id]
+                  .setLatLng(ll)
+                  .setPopupContent(pc)
+                  .setIcon(createBusIcon(passengerCount));
+              } else {
+                busMarkers[id] = L.marker(ll, {
+                  icon: createBusIcon(passengerCount),
                 })
-                .catch(e => console.error('【情報更新】エラー:', e))
-                .finally(() => {
-                    if (isFirstLoad) {
-                        loadingOverlay.style.opacity = '0';
-                        setTimeout(() => {
-                            loadingOverlay.style.display = 'none';
-                        }, 500); // transitionの時間と合わせる
-                        isFirstLoad = false;
-                        // 初回ロード完了後にランドマークを読み込む
-                        loadLandmarks(); 
-                    }
-                }); 
+                  .addTo(map)
+                  .bindPopup(pc);
+              }
+            });
+            for (const id in busMarkers) {
+              if (!u.has(parseInt(id, 10))) {
+                map.removeLayer(busMarkers[id]);
+                delete busMarkers[id];
+              }
+            }
+          })
+          .catch((e) => console.error("【情報更新】エラー:", e))
+          .finally(() => {
+            if (isFirstLoad) {
+              loadingOverlay.style.opacity = "0";
+              setTimeout(() => {
+                loadingOverlay.style.display = "none";
+              }, 500); // transitionの時間と合わせる
+              isFirstLoad = false;
+              // 初回ロード完了後にランドマークを読み込む
+              loadLandmarks();
+            }
+          });
+      }
+
+      setInterval(updateBusLocations, 10000);
+      updateBusLocations();
+
+      function updateLastUpdatedTime() {
+        const displayElement = document.getElementById("update-timestamp");
+        fetch("/api/last_updated")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.last_updated) {
+              const lastUpdated = new Date(data.last_updated);
+              const now = new Date();
+              const secondsAgo = Math.round((now - lastUpdated) / 1000);
+              if (secondsAgo >= 0) {
+                displayElement.textContent = `${secondsAgo}秒前に更新`;
+              } else {
+                displayElement.textContent = "更新時刻: ---";
+              }
+            } else {
+              displayElement.textContent = "更新時刻: ---";
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching last updated time:", error);
+            displayElement.textContent = "更新時刻: ---";
+          });
+      }
+
+      setInterval(updateLastUpdatedTime, 1000);
+      updateLastUpdatedTime();
+
+      // --- Dashboard Logic ---
+      let timetableData = {};
+      let lastBusInfo = {};
+
+      // --- データ取得 ---
+      async function fetchTimetable() {
+        try {
+          const response = await fetch("/api/timetable_data");
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          timetableData = await response.json();
+          console.log("時刻表データを取得しました:", timetableData);
+          updateDashboard();
+        } catch (e) {
+          console.error("時刻表データの取得に失敗しました:", e);
+          const dashboard = document.getElementById("dashboard-content");
+          dashboard.innerHTML =
+            '<p class="error">時刻表データを読み込めませんでした。後ほど再読み込みしてください。</p>';
+        }
+      }
+
+      function findNextBus(direction, dayOfWeek) {
+        const now = new Date();
+        const routeData = timetableData[direction];
+
+        if (
+          !routeData ||
+          !routeData.schedules ||
+          !routeData.schedules[dayOfWeek]
+        ) {
+          console.warn(
+            `スケジュールが見つかりません: direction=${direction}, dayOfWeek=${dayOfWeek}`
+          );
+          return { next: null, following: null, final: null };
         }
 
-        setInterval(updateBusLocations, 3000);
-        updateBusLocations();
-        
-        // --- Dashboard Logic ---
-        let timetableData = {};
-        let lastBusInfo = {};
-
-        // --- データ取得 ---
-        async function fetchTimetable() {
-            try {
-                const response = await fetch('/api/timetable_data');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                timetableData = await response.json();
-                console.log("時刻表データを取得しました:", timetableData);
-                updateDashboard();
-            } catch (e) {
-                console.error("時刻表データの取得に失敗しました:", e);
-                const dashboard = document.getElementById('dashboard-content');
-                dashboard.innerHTML = '<p class="error">時刻表データを読み込めませんでした。後ほど再読み込みしてください。</p>';
-            }
+        // 元の時刻表データから直接スケジュールを取得
+        const originalSchedules = routeData.schedules[dayOfWeek];
+        if (!Array.isArray(originalSchedules)) {
+          console.warn(`スケジュールが配列ではありません:`, originalSchedules);
+          return { next: null, following: null, final: null };
         }
 
-        function findNextBus(direction, dayOfWeek) {
-            const now = new Date();
-            const routeData = timetableData[direction];
-            
-            if (!routeData || !routeData.schedules || !routeData.schedules[dayOfWeek]) {
-                console.warn(`スケジュールが見つかりません: direction=${direction}, dayOfWeek=${dayOfWeek}`);
-                return { next: null, following: null, final: null };
-            }
+        const upcomingBuses = [];
+        for (const schedule of originalSchedules) {
+          if (!schedule.time) continue;
 
-            // 元の時刻表データから直接スケジュールを取得
-            const originalSchedules = routeData.schedules[dayOfWeek];
-            if (!Array.isArray(originalSchedules)) {
-                console.warn(`スケジュールが配列ではありません:`, originalSchedules);
-                return { next: null, following: null, final: null };
-            }
+          const [hour, minute] = schedule.time.split(":").map(Number);
+          const busTime = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hour,
+            minute
+          );
 
-            const upcomingBuses = [];
-            for (const schedule of originalSchedules) {
-                if (!schedule.time) continue;
-                
-                const [hour, minute] = schedule.time.split(':').map(Number);
-                const busTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
-
-                if (busTime > now) {
-                    upcomingBuses.push({
-                        busTime: busTime,
-                        time: schedule.time,
-                        is_direct: schedule.is_direct || false
-                    });
-                }
-            }
-            
-            const finalBusTime = originalSchedules.length > 0 ? originalSchedules[originalSchedules.length - 1].time : null;
-
-            return {
-                next: upcomingBuses[0] || null,
-                following: upcomingBuses[1] || null,
-                final: finalBusTime
-            };
+          if (busTime > now) {
+            upcomingBuses.push({
+              busTime: busTime,
+              time: schedule.time,
+              is_direct: schedule.is_direct || false,
+            });
+          }
         }
 
-        function updateDashboard() {
-            const now = new Date();
-            const dayOfWeek = getDayOfWeek(now);
+        const finalBusTime =
+          originalSchedules.length > 0
+            ? originalSchedules[originalSchedules.length - 1].time
+            : null;
 
-            updateDirection('seta_to_univ', dayOfWeek);
-            updateDirection('univ_to_seta', dayOfWeek);
+        return {
+          next: upcomingBuses[0] || null,
+          following: upcomingBuses[1] || null,
+          final: finalBusTime,
+        };
+      }
+
+      async function updateDashboard() {
+        try {
+          const response = await fetch("/api/day_type");
+          const data = await response.json();
+          const dayOfWeek = data.day_type;
+
+          updateDirection("seta_to_univ", dayOfWeek);
+          updateDirection("univ_to_seta", dayOfWeek);
+        } catch (error) {
+          console.error("曜日タイプの取得に失敗しました:", error);
+          // エラーが発生した場合は、従来の方法で曜日を判定（フォールバック）
+          const now = new Date();
+          const day = now.getDay();
+          const fallbackDayType =
+            day === 0 ? "holidays" : day === 6 ? "saturdays" : "weekdays";
+          updateDirection("seta_to_univ", fallbackDayType);
+          updateDirection("univ_to_seta", fallbackDayType);
         }
+      }
 
-        function updateDirection(direction, dayOfWeek) {
-            const busInfo = findNextBus(direction, dayOfWeek);
-            const countdownContainer = document.getElementById(`countdown-${direction}`);
-            const now = new Date();
+      function updateDirection(direction, dayOfWeek) {
+        const busInfo = findNextBus(direction, dayOfWeek);
+        const countdownContainer = document.getElementById(
+          `countdown-${direction}`
+        );
+        const now = new Date();
 
-            if (busInfo.next) {
-                const diffNext = busInfo.next.busTime - now;
-                const minsNext = Math.ceil(diffNext / 60000);
-                const countdownTextNext = diffNext < 60000 ? `<span class="imminent">まもなく</span>` : `${minsNext}分後`;
+        if (busInfo.next) {
+          const diffNext = busInfo.next.busTime - now;
+          const minsNext = Math.ceil(diffNext / 60000);
+          const countdownTextNext =
+            diffNext < 60000
+              ? `<span class="imminent">まもなく</span>`
+              : `${minsNext}分後`;
 
-                const nextBusHtml = `
+          const nextBusHtml = `
                     <div class="countdown-item">
-                        <span class="departure-time">${busInfo.next.time} 発 ${busInfo.next.is_direct ? '<span class="direct-tag">直</span>' : ''}</span>
+                        <span class="departure-time">${busInfo.next.time} 発 ${
+            busInfo.next.is_direct ? '<span class="direct-tag">直</span>' : ""
+          }</span>
                         <span class="time">${countdownTextNext}</span>
                     </div>`;
 
-                let followingBusHtml = '';
-                if (busInfo.following) {
-                    const diffFollowing = busInfo.following.busTime - now;
-                    const minsFollowing = Math.ceil(diffFollowing / 60000);
-                    const countdownTextFollowing = `${minsFollowing}分後`;
+          let followingBusHtml = "";
+          if (busInfo.following) {
+            const diffFollowing = busInfo.following.busTime - now;
+            const minsFollowing = Math.ceil(diffFollowing / 60000);
+            const countdownTextFollowing = `${minsFollowing}分後`;
 
-                    followingBusHtml = `
+            followingBusHtml = `
                         <div class="countdown-item secondary">
-                             <span class="departure-time">${busInfo.following.time} 発 ${busInfo.following.is_direct ? '<span class="direct-tag">直</span>' : ''}</span>
+                             <span class="departure-time">${
+                               busInfo.following.time
+                             } 発 ${
+              busInfo.following.is_direct
+                ? '<span class="direct-tag">直</span>'
+                : ""
+            }</span>
                              <span class="time">${countdownTextFollowing}</span>
                         </div>`;
-                }
-                
-                countdownContainer.innerHTML = nextBusHtml + followingBusHtml;
-            } else {
-                countdownContainer.innerHTML = `<div class="no-bus-info">本日の運行は終了しました</div>`;
-            }
-            
-            // PC用とスマホ用の両方の最終バス表示を更新する
-            const finalBusElement = document.getElementById(`final-bus-${direction}`);
-            const finalBusElementPc = document.getElementById(`final-bus-${direction}-pc`);
+          }
 
-            if (busInfo.final) {
-                if (finalBusElement) finalBusElement.textContent = busInfo.final;
-                if (finalBusElementPc) finalBusElementPc.textContent = busInfo.final;
-            } else {
-                if (finalBusElement) finalBusElement.textContent = "---";
-                if (finalBusElementPc) finalBusElementPc.textContent = "---";
-            }
+          countdownContainer.innerHTML = nextBusHtml + followingBusHtml;
+        } else {
+          countdownContainer.innerHTML = `<div class="no-bus-info">本日の運行は終了しました</div>`;
         }
 
-        function getDayOfWeek(date) {
-            const day = date.getDay();
-            return (day === 0) ? 'holidays' : (day === 6) ? 'saturdays' : 'weekdays';
+        // PC用とスマホ用の両方の最終バス表示を更新する
+        const finalBusElement = document.getElementById(
+          `final-bus-${direction}`
+        );
+        const finalBusElementPc = document.getElementById(
+          `final-bus-${direction}-pc`
+        );
+
+        if (busInfo.final) {
+          if (finalBusElement) finalBusElement.textContent = busInfo.final;
+          if (finalBusElementPc) finalBusElementPc.textContent = busInfo.final;
+        } else {
+          if (finalBusElement) finalBusElement.textContent = "---";
+          if (finalBusElementPc) finalBusElementPc.textContent = "---";
+        }
+      }
+
+      // 初期化処理
+      fetchTimetable();
+      setInterval(updateDashboard, 1000); // 1秒ごとにダッシュボードを更新
+
+      const legendTitle = document.getElementById("legend-title");
+      const legendDetails = document.getElementById("legend-details");
+      legendTitle.addEventListener("click", () => {
+        const isHidden = legendDetails.style.display === "none";
+        legendDetails.style.display = isHidden ? "block" : "none";
+        legendTitle.querySelector("i").className = isHidden
+          ? "fa-solid fa-caret-up"
+          : "fa-solid fa-caret-down";
+      });
+
+      // --- スワイプ機能のロジック ---
+      function setupSwipe() {
+        // スマホ縦向きでない場合は処理を中断
+        if (
+          window.innerWidth > 768 ||
+          window.matchMedia("(orientation: landscape)").matches
+        ) {
+          return;
         }
 
-        // 初期化処理
-        fetchTimetable();
-        setInterval(updateDashboard, 1000); // 1秒ごとにダッシュボードを更新
+        const slider = document.getElementById("countdown-slider");
+        const dots = document.querySelectorAll(".dot");
+        let currentIndex = 0;
+        let startX = 0;
+        let diffX = 0;
 
-        const legendTitle = document.getElementById('legend-title');
-        const legendDetails = document.getElementById('legend-details');
-        legendTitle.addEventListener('click', () => {
-            const isHidden = legendDetails.style.display === 'none';
-            legendDetails.style.display = isHidden ? 'block' : 'none';
-            legendTitle.querySelector('i').className = isHidden ? 'fa-solid fa-caret-up' : 'fa-solid fa-caret-down';
+        function updateSlider() {
+          slider.style.transform = `translateX(-${currentIndex * 50}%)`;
+          dots.forEach((dot, index) => {
+            dot.classList.toggle("active", index === currentIndex);
+          });
+        }
+
+        slider.addEventListener("touchstart", (e) => {
+          startX = e.touches[0].clientX;
         });
 
-        // --- スワイプ機能のロジック ---
-        function setupSwipe() {
-            // スマホ縦向きでない場合は処理を中断
-            if (window.innerWidth > 768 || window.matchMedia("(orientation: landscape)").matches) {
-                return;
-            }
+        slider.addEventListener("touchmove", (e) => {
+          if (!startX) return;
+          diffX = e.touches[0].clientX - startX;
+        });
 
-            const slider = document.getElementById('countdown-slider');
-            const dots = document.querySelectorAll('.dot');
-            let currentIndex = 0;
-            let startX = 0;
-            let diffX = 0;
+        slider.addEventListener("touchend", () => {
+          const threshold = 50; // 50px以上スワイプしたら切り替え
+          if (diffX < -threshold) {
+            // 左スワイプ
+            currentIndex = 1;
+          } else if (diffX > threshold) {
+            // 右スワイプ
+            currentIndex = 0;
+          }
+          updateSlider();
+          startX = 0;
+          diffX = 0;
+        });
+      }
 
-            function updateSlider() {
-                slider.style.transform = `translateX(-${currentIndex * 50}%)`;
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentIndex);
-                });
-            }
+      // ページ読み込み時とウィンドウサイズ変更時にセットアップを実行
+      window.addEventListener("load", setupSwipe);
+      window.addEventListener("resize", setupSwipe);
 
-            slider.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
+      // --- 最終バスパネルのロジック ---
+      function setupFinalBusPanel() {
+        const panel = document.getElementById("final-bus-panel");
+        const handle = document.getElementById("final-bus-handle");
+        const summarySection = document.getElementById(
+          "dashboard-section-summary"
+        );
+
+        if (!panel || !handle || !summarySection) return;
+
+        const isMobilePortrait =
+          window.innerWidth <= 768 &&
+          window.matchMedia("(orientation: portrait)").matches;
+
+        if (isMobilePortrait) {
+          // --- スマートフォン（縦向き）の場合 ---
+          panel.style.display = "block";
+          summarySection.style.display = "none";
+
+          // イベントリスナーが重複しないようにフラグで管理
+          if (!handle.dataset.listenerAttached) {
+            handle.addEventListener("click", () => {
+              panel.classList.toggle("is-open");
             });
-
-            slider.addEventListener('touchmove', (e) => {
-                if (!startX) return;
-                diffX = e.touches[0].clientX - startX;
-            });
-
-            slider.addEventListener('touchend', () => {
-                const threshold = 50; // 50px以上スワイプしたら切り替え
-                if (diffX < -threshold) { // 左スワイプ
-                    currentIndex = 1;
-                } else if (diffX > threshold) { // 右スワイプ
-                    currentIndex = 0;
-                }
-                updateSlider();
-                startX = 0;
-                diffX = 0;
-            });
+            handle.dataset.listenerAttached = "true";
+          }
+        } else {
+          // --- PCや横向きの場合 ---
+          panel.style.display = "none";
+          summarySection.style.display = "block";
         }
-        
-        // ページ読み込み時とウィンドウサイズ変更時にセットアップを実行
-        window.addEventListener('load', setupSwipe);
-        window.addEventListener('resize', setupSwipe);
+      }
 
-        // --- 最終バスパネルのロジック ---
-        function setupFinalBusPanel() {
-            const panel = document.getElementById('final-bus-panel');
-            const handle = document.getElementById('final-bus-handle');
-            const summarySection = document.getElementById('dashboard-section-summary');
-
-            if (!panel || !handle || !summarySection) return;
-
-            const isMobilePortrait = window.innerWidth <= 768 && window.matchMedia("(orientation: portrait)").matches;
-
-            if (isMobilePortrait) {
-                // --- スマートフォン（縦向き）の場合 ---
-                panel.style.display = 'block';
-                summarySection.style.display = 'none';
-                
-                // イベントリスナーが重複しないようにフラグで管理
-                if (!handle.dataset.listenerAttached) {
-                    handle.addEventListener('click', () => {
-                        panel.classList.toggle('is-open');
-                    });
-                    handle.dataset.listenerAttached = 'true';
-                }
-            } else {
-                // --- PCや横向きの場合 ---
-                panel.style.display = 'none';
-                summarySection.style.display = 'block';
-            }
-        }
-
-        // ページ読み込み時とウィンドウサイズ変更時にパネルをセットアップ
-        window.addEventListener('load', setupFinalBusPanel);
-        window.addEventListener('resize', setupFinalBusPanel);
+      // ページ読み込み時とウィンドウサイズ変更時にパネルをセットアップ
+      window.addEventListener("load", setupFinalBusPanel);
+      window.addEventListener("resize", setupFinalBusPanel);
     </script>
-</body>
-</html> 
+  </body>
+</html>

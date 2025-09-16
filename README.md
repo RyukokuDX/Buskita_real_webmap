@@ -42,28 +42,82 @@ basukita-project/
 └── docker-compose.yml # Docker Compose定義
 ```
 
-## 5. 実行方法
+## 5. セットアップと実行方法
 
-### 5.1. ローカル環境での実行
+### 5.1. 必要なもの
 
-1.  **依存ライブラリのインストール:**
+- Python 3.8 以上
+- `pip` と `venv`
 
-    ```bash
-    # 本番環境向け
-    pip install -r requirements.txt
+### 5.2. 環境構築手順
 
-    # テストなど開発に必要なライブラリを含む場合
-    pip install -r requirements-dev.txt
-    ```
+1. **リポジトリをクローンします**
 
-2.  **アプリケーションの実行:**
-    ```bash
-    python3 run.py
-    ```
-3.  **アクセス:**
-    Web ブラウザで `http://127.0.0.1:5001` にアクセスします。
+   ```bash
+   git clone https://github.com/your-username/basukita-project.git
+   cd basukita-project
+   ```
 
-### 5.2. Docker を使用した実行
+2. **Python 仮想環境を作成して有効化します**
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **依存ライブラリをインストールします**
+
+   - 本番環境に必要なライブラリのみをインストールする場合：
+     ```bash
+     pip install -r requirements.txt
+     ```
+   - テストなど、開発に必要な全てのライブラリをインストールする場合：
+     ```bash
+     pip install -r requirements-dev.txt
+     ```
+
+4. **環境変数を設定します**
+   プロジェクトルートに`.env`という名前のファイルを作成し、以下の内容を記述します。`SECRET_KEY`はアプリケーションのセキュリティに関わるため、ご自身で生成したランダムな文字列に置き換えることを強く推奨します。
+
+   ```ini
+   # .envファイルの内容
+
+   # Flaskアプリケーションの動作モード (development | production)
+   FLASK_ENV=development
+
+   # Flaskのデバッグモード (開発中はTrueが便利)
+   FLASK_DEBUG=True
+
+   # アプリケーションのセッション管理などに使われる秘密鍵
+   # 例: python3 -c 'import secrets; print(secrets.token_hex(16))' で生成
+   SECRET_KEY='your_very_secret_key_here'
+
+   # (任意) バス会社APIのベースURL (デフォルト値あり)
+   # API_BASE_URL=https://api.example.com
+   ```
+
+### 5.3. アプリケーションの実行
+
+1. **開発サーバーを起動します**
+
+   ```bash
+   python3 run.py
+   ```
+
+2. **ブラウザでアクセスします**
+   Web ブラウザで `http://127.0.0.1:5001` を開きます。
+
+## 6. テストの実行
+
+プロジェクトの品質を保証するため、以下のコマンドでテストスイートを実行できます。
+
+```bash
+pytest
+```
+
+## 7. Docker を使用した実行 (参考)
+
+Docker 環境が利用可能な場合は、以下のコマンドでコンテナを起動することもできます。
 
 1.  **Docker コンテナのビルドと起動:**
     ```bash

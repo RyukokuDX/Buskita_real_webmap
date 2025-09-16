@@ -9,6 +9,6 @@ if __name__ == "__main__":
     # 環境変数からデバッグモードとポートを取得（デフォルト値も設定）
     debug_mode = os.environ.get("FLASK_DEBUG", "True").lower() == "true"
     port = int(os.environ.get("FLASK_PORT", 5001))
-    
+
     # 0.0.0.0 は、コンテナなどの外部からアクセスできるようにするためです。
     app.run(debug=debug_mode, host="0.0.0.0", port=port)
