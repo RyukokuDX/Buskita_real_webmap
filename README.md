@@ -1,52 +1,127 @@
-# Ryukoku Bus Navi - リアルタイムバスナビゲーションアプリ
+# Ryukoku Bus Navi - リアルタイムバスナビゲーション
 
-このプロジェクトは、龍谷大学 瀬田キャンパスに通う学生のための、リアルタイムバスナビゲーションWebアプリケーションです。
+## 1. 概要
 
-## 1. 目的
+**Ryukoku Bus Navi** は、龍谷大学 瀬田キャンパスに通う学生・教職員のためのリアルタイムバスナビゲーション・ウェブアプリケーションです。
 
-このアプリは「Ryukoku Bus Navi」と名付けられ、バス通学における「次のバスはいつ来るの？」「混んでるかな？」といった**学生の不安を解消し、安心で快適な通学体験を提供すること**を目的としています。
+バス通学における「次のバスはいつ来るの？」「混んでるかな？」といった**学生の日常的な不安を解消し、安心で快適な通学体験を提供すること**を目的としています。
 
-[→ 詳細なコンセプトはこちら (docs/CONCEPT.md)](docs/CONCEPT.md)
+このアプリは、単なる移動を支援するツールではなく、日々の学生生活に「確かな安心」と「小さな幸せ」を届けるパートナーとなることを目指しています。
+
+- **コンセプト詳細:** [docs/01_concept_and_requirements/CONCEPT.md](docs/01_concept_and_requirements/CONCEPT.md)
+- **要件定義:** [docs/01_concept_and_requirements/REQUIREMENTS.md](docs/01_concept_and_requirements/REQUIREMENTS.md)
 
 ## 2. 主な機能
 
-- **リアルタイムマップ:** 運行中のバスの位置を地図上にリアルタイムで表示します。(F-01)
-- **詳細情報の表示:** バスのアイコンをクリックすると、行き先、遅延時間、乗客数が表示されます。(F-02, F-04, F-05)
-- **混雑度の可視化:** 乗客数に応じてバスアイコンの色が変わり、一目で混雑状況が分かります。(F-05)
-- **時刻表:** 主要区間の時刻表を確認できます。(F-06)
-- **堅牢なデータ取得:** APIが不調の際も、バックアップを利用して安定したサービスを提供します。(NF-03)
-- **主要ランドマーク表示:** 龍谷大学と瀬田駅の場所を地図上で確認できます。(F-03)
+- **リアルタイムマップ:** 運行中のバスの位置、行き先、遅延時間を地図上にリアルタイムで表示します。
+- **混雑度の可視化:** 乗客数に応じてバスのアイコンが色分けされ、一目で混雑状況を把握できます。
+- **時刻表 & カウントダウン:** 主要区間の時刻表と、次のバスまでの時間を表示します。
+- **堅牢なデータ取得:** API の不調時もバックアップを利用し、安定したサービスを提供します。
+- **構造化ロギング:** アプリケーションの動作状況を記録し、迅速な問題解決を支援します。
 
-[→ 詳細な機能要件はこちら (docs/REQUIREMENTS.md)](docs/REQUIREMENTS.md)
+## 3. 技術スタック
 
-## 3. 技術的な構成
+- **バックエンド:** Python, Flask
+- **フロントエンド:** HTML, CSS, JavaScript (Leaflet.js)
+- **データソース:** バス会社 API, 静的 JSON
+- **インフラ:** Docker
 
-![データフロー図](docs/DATA_FLOW.png)
-*(この図は [docs/DATA_FLOW.md](docs/DATA_FLOW.md) の内容を画像化したものです)*
+- **アーキテクチャ設計:** [docs/02_design_and_architecture/DATA_FLOW.md](docs/02_design_and_architecture/DATA_FLOW.md)
 
-- **バックエンド:** Python / Flask
-- **フロントエンド:** HTML, CSS, JavaScript, Leaflet.js
-- **データソース:**
-    1. **バス会社API:** バスの位置などの動的データ
-    2. **静的JSON (`buskita/static/timetable.json`):** 時刻表データ
+## 4. プロジェクト構造
 
-[→ 詳細なデータフローはこちら (docs/DATA_FLOW.md)](docs/DATA_FLOW.md)
+```
+basukita-project/
+├── buskita/          # アプリケーション本体 (Flask)
+├── docs/             # プロジェクトドキュメント
+├── tests/            # テストコード
+├── config.py         # 設定ファイル
+├── run.py            # 起動スクリプト
+├── requirements.txt  # Python依存ライブラリ
+├── Dockerfile        # Dockerコンテナ定義
+└── docker-compose.yml # Docker Compose定義
+```
 
-## 4. 開発ルール
+## 5. セットアップと実行方法
 
-このプロジェクトは、ユーザー（船長）とAI（航海士）が協力して開発を進めます。
-AIは、分かりやすさ、事実ベースの開発、事前説明、全ての作業記録を約束します。
+### 5.1. 必要なもの
 
-[→ 詳細な開発ルールはこちら (docs/DEVELOPMENT_RULES.md)](docs/DEVELOPMENT_RULES.md)
+- Python 3.8 以上
+- `pip` と `venv`
 
-## 5. 実行方法
+### 5.2. 環境構築手順
 
-1.  リポジトリのルートディレクトリで、必要なライブラリをインストールします:
+1. **リポジトリをクローンします**
+
+   ```bash
+   git clone https://github.com/your-username/basukita-project.git
+   cd basukita-project
+   ```
+
+2. **Python 仮想環境を作成して有効化します**
+
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **依存ライブラリをインストールします**
+
+   - 本番環境に必要なライブラリのみをインストールする場合：
+     ```bash
+     pip install -r requirements.txt
+     ```
+   - テストなど、開発に必要な全てのライブラリをインストールする場合：
+     ```bash
+     pip install -r requirements-dev.txt
+     ```
+
+4. **環境変数を設定します**
+   プロジェクトルートに`.env`という名前のファイルを作成し、以下の内容を記述します。`SECRET_KEY`はアプリケーションのセキュリティに関わるため、ご自身で生成したランダムな文字列に置き換えることを強く推奨します。
+
+   ```ini
+   # .envファイルの内容
+
+   # Flaskアプリケーションの動作モード (development | production)
+   FLASK_ENV=development
+
+   # Flaskのデバッグモード (開発中はTrueが便利)
+   FLASK_DEBUG=True
+
+   # アプリケーションのセッション管理などに使われる秘密鍵
+   # 例: python3 -c 'import secrets; print(secrets.token_hex(16))' で生成
+   SECRET_KEY='your_very_secret_key_here'
+
+   # (任意) バス会社APIのベースURL (デフォルト値あり)
+   # API_BASE_URL=https://api.example.com
+   ```
+
+### 5.3. アプリケーションの実行
+
+1. **開発サーバーを起動します**
+
+   ```bash
+   python3 run.py
+   ```
+
+2. **ブラウザでアクセスします**
+   Web ブラウザで `http://127.0.0.1:5001` を開きます。
+
+## 6. テストの実行
+
+プロジェクトの品質を保証するため、以下のコマンドでテストスイートを実行できます。
+
+```bash
+pytest
+```
+
+## 7. Docker を使用した実行 (参考)
+
+Docker 環境が利用可能な場合は、以下のコマンドでコンテナを起動することもできます。
+
+1.  **Docker コンテナのビルドと起動:**
     ```bash
-    pip install -r buskita/requirements.txt
+    docker-compose up --build
     ```
-2.  アプリケーションを実行します:
-    ```bash
-    python buskita/web_map_app.py
-    ```
-3.  Webブラウザで `http://127.0.0.1:5001` にアクセスします。 
+2.  **アクセス:**
+    Web ブラウザで `http://127.0.0.1:5001` にアクセスします。

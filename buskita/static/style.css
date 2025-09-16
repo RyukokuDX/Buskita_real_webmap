@@ -297,17 +297,182 @@ body, html {
 }
 
 /* --- レスポンシブ対応 --- */
-@media (max-width: 768px) {
+/* 1. スマートフォン（縦向き）のスタイル */
+@media (max-width: 768px) and (orientation: portrait) {
     body {
+        /* マップとダッシュボードを縦積みに変更 */
         flex-direction: column;
     }
 
     #map-container {
-        height: auto;
+        /* マップの高さを画面の60%に */
+        height: 60vh; 
+        flex-grow: 0; /* flex-growをリセット */
     }
 
     #dashboard {
+        /* ダッシュボードは画面幅いっぱいに */
         width: 100%;
-        height: auto;
+        /* ダッシュボードの高さを画面の40%に */
+        height: 40vh; 
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1); /* 影を上側に変更 */
+        position: relative; /* スライドパネルの基準点として必要 */
+        overflow: hidden; /* パネルがはみ出さないように */
+    }
+
+    /* ヘッダーをFlexboxにして、タイトルとボタンを両端揃えにする */
+    #dashboard header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px; /* 上下の余白を詰める */
+    }
+    
+    #dashboard header h1 {
+        font-size: 18px; /* タイトルも少し小さく */
+    }
+
+    /* 縦画面ではメニューの上下ボーダーとpaddingをリセット */
+    .dashboard-menu {
+        border-bottom: none;
+        padding: 0;
+    }
+
+    /* ボタンの余白を少し調整 */
+    .menu-item {
+        padding: 8px 12px;
+    }
+
+    /* カウントダウン部分の余白を詰めてスクロールを防ぐ */
+    #dashboard-section-countdown {
+        margin-bottom: 5px; /* 下の余白を詰める */
+        padding: 10px;
+    }
+
+    .countdown-group {
+        margin-bottom: 5px; /* グループ間の余白も詰める */
+    }
+
+    #countdown-dots {
+        padding-top: 5px;
+    }
+
+    #dashboard .content { padding: 10px; } /* コンテンツ全体の余白も詰める */
+    .countdown-item .time,
+    .countdown-item.secondary .time { font-size: 16px; }
+    .legend { bottom: 10px; right: 10px; }
+
+    /* --- スワイプ機能のためのスタイル --- */
+    #countdown-slider-container {
+        overflow: hidden; /* はみ出た部分を隠す */
+        position: relative;
+    }
+
+    #countdown-slider {
+        display: flex;
+        width: 200%; /* 2つの要素を横に並べるため */
+        transition: transform 0.3s ease-in-out; /* なめらかなスライドアニメーション */
+    }
+
+    .countdown-group-wrapper {
+        width: 50%; /* 全体の50%の幅を持つ */
+        padding: 0 5px; /* 左右に少し余白 */
+        box-sizing: border-box; /* paddingを含めて幅を計算 */
+    }
+
+    #countdown-dots {
+        text-align: center;
+        padding-top: 10px;
+    }
+
+    .dot {
+        height: 10px;
+        width: 10px;
+        margin: 0 5px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+    .dot.active {
+        background-color: #007bff;
+    }
+
+    /* --- 最終バスのスライドパネル --- */
+    #final-bus-panel {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        border-top: 1px solid #dee2e6;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        transform: translateY(calc(100% - 40px)); /* ハンドルの高さ分だけ見えるようにする */
+        transition: transform 0.3s ease-in-out;
+        z-index: 10;
+    }
+
+    #final-bus-panel.is-open {
+        transform: translateY(0); /* パネルを完全に表示 */
+    }
+
+    #final-bus-handle {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        color: #495057;
+    }
+
+    #final-bus-handle i {
+        margin-right: 8px;
+    }
+
+    #final-bus-content {
+        padding: 0 20px 20px 20px;
+    }
+}
+
+/* 2. タブレットなど（横向き）のスタイル */
+@media (max-width: 1024px) and (orientation: landscape) {
+    #dashboard {
+        /* ダッシュボードの幅を少し狭くして、地図エリアを広げる */
+        width: 280px; 
+    }
+}
+
+/* 【更新】特に縦に短いスマートフォン向けの調整 */
+@media (max-height: 700px) and (orientation: portrait) {
+    #dashboard header {
+        padding: 6px 15px; /* ヘッダーの余白をさらに詰める */
+    }
+
+    #dashboard header h1 {
+        font-size: 16px; /* タイトルをさらに小さく */
+    }
+    
+    .menu-item {
+        padding: 6px 10px;
+    }
+
+    #dashboard .content {
+        padding: 5px 8px; /* コンテンツの余白も詰める */
+    }
+
+    .countdown-item {
+        padding: 6px 5px; /* 各バス情報の余白も詰める */
+        font-size: 15px; /* 文字も少し小さく */
+    }
+
+    .countdown-group {
+        margin-bottom: 4px; /* グループ間の余白も詰める */
+    }
+
+    #countdown-dots {
+        padding-top: 4px;
     }
 } 

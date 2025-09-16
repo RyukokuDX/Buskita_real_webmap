@@ -1,0 +1,8 @@
+playwright
+pandas
+pytest
+pytest-mock
+python-dotenv
+black
+pip-tools
+flake8
